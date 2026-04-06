@@ -1,5 +1,5 @@
 import AVFoundation
-import Combine
+import MediaPlayer
 
 @MainActor
 @Observable
@@ -31,6 +31,7 @@ final class AudioPlayerService {
 
     init() {
         configureAudioSession()
+        setupRemoteCommandCenter()
     }
 
     private func configureAudioSession() {
@@ -41,6 +42,94 @@ final class AudioPlayerService {
             // Audio session configuration failed
         }
     }
+
+    // MARK: - Now Playing Info & Remote Commands
+
+    private func setupRemoteCommandCenter() {
+        let commandCenter = MPRemoteCommandCenter.shared()
+
+        commandCenter.playCommand.addTarget { [weak self] _ in
+            Task { @MainActor in
+                self?.togglePlayPause()
+            }
+            return .success
+        }
+
+        commandCenter.pauseCommand.addTarget { [weak self] _ in
+            Task { @MainActor in
+                self?.togglePlayPause()
+            }
+            return .success
+        }
+
+        commandCenter.nextTrackCommand.addTarget { [weak self] _ in
+            Task { @MainActor in
+                self?.playNext()
+            }
+            return .success
+        }
+
+        commandCenter.previousTrackCommand.addTarget { [weak self] _ in
+            Task { @MainActor in
+                self?.playPrevious()
+            }
+            return .success
+        }
+
+        commandCenter.changePlaybackPositionCommand.addTarget { [weak self] event in
+            guard let positionEvent = event as? MPChangePlaybackPositionCommandEvent else {
+                return .commandFailed
+            }
+            Task { @MainActor in
+                guard let self, self.duration > 0 else { return }
+                let progress = positionEvent.positionTime / self.duration
+                self.seek(to: progress)
+            }
+            return .success
+        }
+    }
+
+    private func updateNowPlayingInfo() {
+        guard let song = currentSong else {
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
+            return
+        }
+
+        var info: [String: Any] = [
+            MPMediaItemPropertyTitle: song.trackName,
+            MPMediaItemPropertyArtist: song.artistName,
+            MPNowPlayingInfoPropertyElapsedPlaybackTime: currentTime,
+            MPMediaItemPropertyPlaybackDuration: duration,
+            MPNowPlayingInfoPropertyPlaybackRate: state == .playing ? 1.0 : 0.0,
+        ]
+
+        if let albumName = song.collectionName {
+            info[MPMediaItemPropertyAlbumTitle] = albumName
+        }
+
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = info
+
+        // Load artwork asynchronously
+        if let urlString = song.artworkUrlLarge, let url = URL(string: urlString) {
+            Task.detached {
+                do {
+                    let (data, _) = try await URLSession.shared.data(from: url)
+                    if let image = UIImage(data: data) {
+                        let artwork = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
+                        await MainActor.run {
+                            var currentInfo = MPNowPlayingInfoCenter.default().nowPlayingInfo ?? [:]
+                            currentInfo[MPMediaItemPropertyArtwork] = artwork
+                            MPNowPlayingInfoCenter.default().nowPlayingInfo = currentInfo
+                        }
+                    }
+                } catch {
+                    // Artwork loading failed
+                }
+            }
+        }
+    }
+
+    // MARK: - Playback
 
     func play(song: Song, playlist: [Song]? = nil, index: Int = 0) {
         if let playlist {
@@ -65,6 +154,7 @@ final class AudioPlayerService {
                     self.duration = item.duration.seconds.isNaN ? 0 : item.duration.seconds
                     self.player?.play()
                     self.state = .playing
+                    self.updateNowPlayingInfo()
                 case .failed:
                     self.state = .idle
                 default:
@@ -78,6 +168,10 @@ final class AudioPlayerService {
             Task { @MainActor in
                 guard let self else { return }
                 self.currentTime = time.seconds.isNaN ? 0 : time.seconds
+                // Update elapsed time periodically
+                var info = MPNowPlayingInfoCenter.default().nowPlayingInfo ?? [:]
+                info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.currentTime
+                MPNowPlayingInfoCenter.default().nowPlayingInfo = info
             }
         }
 
@@ -102,17 +196,21 @@ final class AudioPlayerService {
             player.play()
             state = .playing
         }
+        updateNowPlayingInfo()
     }
 
     func seek(to progress: Double) {
         guard let player, duration > 0 else { return }
         let time = CMTime(seconds: progress * duration, preferredTimescale: 600)
         player.seek(to: time)
+        currentTime = progress * duration
+        updateNowPlayingInfo()
     }
 
     func playNext() {
         guard !playlist.isEmpty else {
             state = .idle
+            updateNowPlayingInfo()
             return
         }
         let nextIndex = currentIndex + 1
@@ -122,6 +220,7 @@ final class AudioPlayerService {
         } else {
             state = .idle
             currentTime = 0
+            updateNowPlayingInfo()
         }
     }
 

@@ -145,6 +145,18 @@ final class SongsViewModel {
         loadRecentlyPlayed(modelContext: modelContext)
     }
 
+    func removeRecentlyPlayed(song: Song, modelContext: ModelContext) {
+        let trackId = song.trackId
+        let descriptor = FetchDescriptor<CachedSong>(
+            predicate: #Predicate { $0.trackId == trackId }
+        )
+        if let cached = try? modelContext.fetch(descriptor).first {
+            modelContext.delete(cached)
+            try? modelContext.save()
+        }
+        recentlyPlayed.removeAll { $0.id == song.id }
+    }
+
     func cacheSongs(_ songs: [Song], modelContext: ModelContext) {
         for song in songs {
             let trackId = song.trackId

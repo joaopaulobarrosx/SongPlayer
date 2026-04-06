@@ -7,6 +7,7 @@ struct SongsView: View {
     @Bindable var audioPlayer: AudioPlayerService
     @State private var moreSheetSong: Song?
     @State private var navigateToAlbum: Int?
+    @FocusState private var isSearchFocused: Bool
 
     var body: some View {
         NavigationStack {
@@ -30,7 +31,7 @@ struct SongsView: View {
                 }
             }
             .listStyle(.plain)
-            .scrollDismissesKeyboard(.interactively)
+            .scrollDismissesKeyboard(.immediately)
             .navigationTitle("Songs")
             .refreshable {
                 viewModel.searchSongs()
@@ -80,6 +81,7 @@ struct SongsView: View {
                 TextField("Search", text: $viewModel.searchText)
                     .textFieldStyle(.plain)
                     .submitLabel(.search)
+                    .focused($isSearchFocused)
                     .onSubmit {
                         viewModel.searchSongs()
                     }
@@ -104,6 +106,12 @@ struct SongsView: View {
         Section {
             ForEach(viewModel.recentlyPlayed) { song in
                 songRow(song: song, playlist: viewModel.recentlyPlayed)
+            }
+            .onDelete { offsets in
+                for index in offsets {
+                    let song = viewModel.recentlyPlayed[index]
+                    viewModel.removeRecentlyPlayed(song: song, modelContext: modelContext)
+                }
             }
         } header: {
             Text("Recently Played")
@@ -169,6 +177,7 @@ struct SongsView: View {
     // MARK: - Actions
 
     private func playSong(_ song: Song, from playlist: [Song]) {
+        isSearchFocused = false
         let index = playlist.firstIndex(where: { $0.id == song.id }) ?? 0
         audioPlayer.play(song: song, playlist: playlist, index: index)
         viewModel.markAsPlayed(song: song, modelContext: modelContext)
