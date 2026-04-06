@@ -16,18 +16,38 @@ final class SongsViewModel {
     private(set) var state: State = .idle
     private(set) var hasMoreResults = true
 
-    var searchText: String = ""
+    var searchText: String = "" {
+        didSet { scheduleDebounce() }
+    }
 
     private let networkService: NetworkServiceProtocol
     private let pageSize = 25
     private var currentOffset = 0
     private var searchTask: Task<Void, Never>?
+    private var debounceTask: Task<Void, Never>?
 
     init(networkService: NetworkServiceProtocol = NetworkService()) {
         self.networkService = networkService
     }
 
+    private func scheduleDebounce() {
+        debounceTask?.cancel()
+
+        let trimmed = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        if trimmed.isEmpty {
+            searchSongs()
+            return
+        }
+
+        debounceTask = Task {
+            try? await Task.sleep(for: .seconds(2))
+            guard !Task.isCancelled else { return }
+            searchSongs()
+        }
+    }
+
     func searchSongs() {
+        debounceTask?.cancel()
         searchTask?.cancel()
         let trimmed = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
 

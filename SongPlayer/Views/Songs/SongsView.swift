@@ -13,6 +13,8 @@ struct SongsView: View {
     var body: some View {
         NavigationStack {
             List {
+                searchBarSection
+
                 if viewModel.searchText.isEmpty && !viewModel.recentlyPlayed.isEmpty {
                     recentlyPlayedSection
                 }
@@ -31,15 +33,6 @@ struct SongsView: View {
             }
             .listStyle(.plain)
             .navigationTitle("Songs")
-            .searchable(text: $viewModel.searchText, prompt: "Search")
-            .onSubmit(of: .search) {
-                viewModel.searchSongs()
-            }
-            .onChange(of: viewModel.searchText) {
-                if viewModel.searchText.isEmpty {
-                    viewModel.searchSongs()
-                }
-            }
             .refreshable {
                 viewModel.searchSongs()
                 try? await Task.sleep(for: .milliseconds(500))
@@ -89,6 +82,34 @@ struct SongsView: View {
     }
 
     // MARK: - Sections
+
+    private var searchBarSection: some View {
+        Section {
+            HStack(spacing: 8) {
+                Image(systemName: "magnifyingglass")
+                    .foregroundStyle(.secondary)
+                TextField("Search", text: $viewModel.searchText)
+                    .textFieldStyle(.plain)
+                    .submitLabel(.search)
+                    .onSubmit {
+                        viewModel.searchSongs()
+                    }
+                if !viewModel.searchText.isEmpty {
+                    Button {
+                        viewModel.searchText = ""
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundStyle(.secondary)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .padding(10)
+            .background(.quaternary, in: RoundedRectangle(cornerRadius: 10))
+        }
+        .listRowSeparator(.hidden)
+        .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
+    }
 
     private var recentlyPlayedSection: some View {
         Section {
