@@ -164,15 +164,21 @@ final class AudioPlayerService {
             }
         }
 
-        let interval = CMTime(seconds: 0.25, preferredTimescale: 600)
+        // 60fps interval for fluid slider movement
+        let interval = CMTime(value: 1, timescale: 60)
         timeObserver = player?.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
-            Task { @MainActor in
+            // Already on main queue — use assumeIsolated to avoid async Task overhead
+            MainActor.assumeIsolated {
                 guard let self else { return }
-                self.currentTime = time.seconds.isNaN ? 0 : time.seconds
-                // Update elapsed time periodically
-                var info = MPNowPlayingInfoCenter.default().nowPlayingInfo ?? [:]
-                info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.currentTime
-                MPNowPlayingInfoCenter.default().nowPlayingInfo = info
+                let seconds = time.seconds
+                guard !seconds.isNaN else { return }
+                self.currentTime = seconds
+                // Update lock screen at ~1fps (enough for the lock screen display)
+                if Int(seconds * 4) % 4 == 0 {
+                    var info = MPNowPlayingInfoCenter.default().nowPlayingInfo ?? [:]
+                    info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = seconds
+                    MPNowPlayingInfoCenter.default().nowPlayingInfo = info
+                }
             }
         }
 
@@ -195,13 +201,32 @@ final class AudioPlayerService {
     }
 
     func togglePlayPause() {
-        guard let player else { return }
         if state == .playing {
-            player.pause()
+            player?.pause()
             state = .paused
         } else if state == .paused {
-            player.play()
+            player?.play()
             state = .playing
+        } else if state == .idle, let song = currentSong {
+            if let player {
+                // Player still alive (song ended but not cleaned up).
+                // Seek to wherever the slider currently is, then play.
+                let resumeTime = max(0, min(currentTime, duration))
+                let seekTarget = CMTime(seconds: resumeTime, preferredTimescale: 600)
+                state = .loading
+                player.seek(to: seekTarget) { [weak self] _ in
+                    Task { @MainActor in
+                        guard let self else { return }
+                        self.player?.play()
+                        self.state = .playing
+                        self.updateNowPlayingInfo()
+                    }
+                }
+            } else {
+                // Player was fully cleaned up — recreate it.
+                play(song: song)
+            }
+            return
         }
         updateNowPlayingInfo()
     }
