@@ -12,15 +12,6 @@ struct MainTabView: View {
                         song: audioPlayer.currentSong ?? Song.placeholder,
                         audioPlayer: audioPlayer
                     )
-                    .toolbar {
-                        ToolbarItem(placement: .topBarLeading) {
-                            Button {
-                                showFullPlayer = false
-                            } label: {
-                                Image(systemName: "chevron.down")
-                            }
-                        }
-                    }
                 }
             }
             .environment(\.openFullPlayer, { showFullPlayer = true })

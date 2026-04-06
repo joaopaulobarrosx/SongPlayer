@@ -26,18 +26,22 @@ struct SongRowView: View {
             .frame(width: 48, height: 48)
             .clipShape(RoundedRectangle(cornerRadius: 6))
 
-            if isCurrentSong {
-                NowPlayingIcon(isPlaying: isPlaying)
-            }
-
             VStack(alignment: .leading, spacing: 2) {
-                Text(song.trackName)
-                    .font(.body)
-                    .lineLimit(1)
-                    .foregroundStyle(isCurrentSong ? .green : .primary)
+                // Song name row: icon + name in green when playing
+                HStack(spacing: 6) {
+                    if isCurrentSong {
+                        NowPlayingIcon(isPlaying: isPlaying)
+                    }
+                    Text(song.trackName)
+                        .font(.body)
+                        .lineLimit(1)
+                        .foregroundStyle(isCurrentSong ? .green : .primary)
+                }
+
+                // Artist name stays in the same position (no icon shift)
                 Text(song.artistName)
                     .font(.caption)
-                    .foregroundStyle(isCurrentSong ? .green.opacity(0.7) : .secondary)
+                    .foregroundStyle(.secondary)
                     .lineLimit(1)
             }
 

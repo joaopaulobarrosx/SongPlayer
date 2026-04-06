@@ -7,7 +7,7 @@ struct NowPlayingIcon: View {
         Image(systemName: "chart.bar.xaxis")
             .symbolEffect(.variableColor.iterative, options: .repeating, isActive: isPlaying)
             .foregroundStyle(.green)
-            .font(.caption)
-            .frame(width: 20)
+            .font(.body)
+            .frame(width: 24)
     }
 }

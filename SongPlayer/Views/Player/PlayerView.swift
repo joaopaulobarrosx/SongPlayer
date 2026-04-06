@@ -9,6 +9,7 @@ struct PlayerView: View {
     @State private var showMoreSheet = false
     @State private var isDragging = false
     @State private var dragProgress: Double = 0
+    @State private var isRepeatOn = false
 
     private var activeSong: Song {
         audioPlayer.currentSong ?? song
@@ -17,37 +18,37 @@ struct PlayerView: View {
     var body: some View {
         VStack(spacing: 0) {
             Spacer()
-            Spacer()
 
             artworkView
 
             Spacer()
-                .frame(height: 40)
+                .frame(minHeight: 24, maxHeight: .infinity)
 
             songInfoView
 
             Spacer()
-                .frame(height: 28)
+                .frame(height: 20)
 
             timelineView
 
             Spacer()
-                .frame(height: 28)
+                .frame(height: 24)
 
             controlsView
 
             Spacer()
-                .frame(height: 48)
+                .frame(height: 32)
         }
         .padding(.horizontal, 32)
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
+        .toolbarBackground(.hidden, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button {
                     dismiss()
                 } label: {
-                    Image(systemName: "chevron.backward")
+                    Image(systemName: "chevron.down")
                         .fontWeight(.semibold)
                 }
             }
@@ -61,7 +62,8 @@ struct PlayerView: View {
                 Button {
                     showMoreSheet = true
                 } label: {
-                    Image(systemName: "ellipsis.circle.fill")
+                    Image(systemName: "ellipsis")
+                        .fontWeight(.bold)
                 }
             }
         }
@@ -103,7 +105,7 @@ struct PlayerView: View {
     }
 
     private var songInfoView: some View {
-        HStack(alignment: .center) {
+        HStack(alignment: .bottom) {
             VStack(alignment: .leading, spacing: 4) {
                 Text(activeSong.trackName)
                     .font(.title2)
@@ -118,19 +120,15 @@ struct PlayerView: View {
 
             Spacer()
 
-            // Album artwork thumbnail on the right (Figma style)
-            AsyncImage(url: URL(string: activeSong.artworkUrl100 ?? "")) { phase in
-                switch phase {
-                case .success(let image):
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                default:
-                    EmptyView()
-                }
+            // Repeat toggle button
+            Button {
+                isRepeatOn.toggle()
+            } label: {
+                Image(systemName: isRepeatOn ? "repeat" : "minus.arrow.trianglehead.clockwise")
+                    .font(.title3)
+                    .foregroundStyle(isRepeatOn ? Color(.label) : Color(.secondaryLabel))
             }
-            .frame(width: 48, height: 48)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .accessibilityLabel(isRepeatOn ? "Repeat on" : "Repeat off")
         }
     }
 
@@ -184,14 +182,16 @@ struct PlayerView: View {
             Button {
                 audioPlayer.togglePlayPause()
             } label: {
-                Image(systemName: audioPlayer.state == .playing ? "pause.circle.fill" : "play.circle.fill")
-                    .font(.system(size: 60))
-                    .foregroundStyle(Color(.label))
-                    .symbolRenderingMode(.hierarchical)
+                ZStack {
+                    Circle()
+                        .fill(Color.white.opacity(0.2))
+                        .frame(width: 72, height: 72)
+                    Image(systemName: audioPlayer.state == .playing ? "pause.fill" : "play.fill")
+                        .font(.system(size: 28, weight: .bold))
+                        .foregroundStyle(Color(.label))
+                }
             }
             .buttonStyle(.plain)
-            .glassEffect(.regular.interactive())
-            .clipShape(Circle())
             .accessibilityLabel(audioPlayer.state == .playing ? "Pause" : "Play")
 
             Button {
