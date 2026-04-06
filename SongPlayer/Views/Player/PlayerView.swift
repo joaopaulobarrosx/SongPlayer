@@ -3,12 +3,22 @@ import SwiftUI
 struct PlayerView: View {
     let song: Song
     @Bindable var audioPlayer: AudioPlayerService
+    var onDismiss: (() -> Void)? = nil
     var onViewAlbum: ((Int) -> Void)?
 
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.dismiss) private var environmentDismiss
     @State private var showMoreSheet = false
     @State private var isDragging = false
     @State private var dragProgress: Double = 0
+    @State private var dragOffset: CGFloat = 0
+
+    private func dismissPlayer() {
+        if let onDismiss {
+            onDismiss()
+        } else {
+            environmentDismiss()
+        }
+    }
 
     private var activeSong: Song {
         audioPlayer.currentSong ?? song
@@ -37,15 +47,44 @@ struct PlayerView: View {
                 .frame(height: 40)
         }
         .padding(.horizontal, 24)
+        .offset(y: dragOffset)
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 30, coordinateSpace: .global)
+                .onChanged { value in
+                    let translation = value.translation.height
+                    // Only track downward drags
+                    guard translation > 0 else { return }
+                    dragOffset = translation * (1 - min(translation / 600, 0.5))
+                }
+                .onEnded { value in
+                    let velocity = value.velocity.height
+                    let translation = value.translation.height
+                    if translation > 120 || velocity > 800 {
+                        withAnimation(.easeOut(duration: 0.25)) {
+                            dragOffset = UIScreen.main.bounds.height
+                        }
+                        dismissPlayer()
+                    } else {
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                            dragOffset = 0
+                        }
+                    }
+                }
+        )
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbarBackground(.hidden, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                Button { dismiss() } label: {
+                Button {
+                    dismissPlayer()
+                } label: {
                     Image(systemName: "chevron.left")
                         .fontWeight(.semibold)
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
                 }
+                .buttonStyle(.plain)
             }
             ToolbarItem(placement: .principal) {
                 Text(activeSong.collectionName ?? "")
@@ -64,7 +103,7 @@ struct PlayerView: View {
             MoreOptionsSheet(song: activeSong) {
                 showMoreSheet = false
                 if let collectionId = activeSong.collectionId {
-                    dismiss()
+                    dismissPlayer()
                     onViewAlbum?(collectionId)
                 }
             }
@@ -98,7 +137,7 @@ struct PlayerView: View {
     // MARK: - Song Info
 
     private var songInfoView: some View {
-        HStack(alignment: .center) {
+        HStack(alignment: .bottom) {
             VStack(alignment: .leading, spacing: 4) {
                 MarqueeText(
                     text: activeSong.trackName,

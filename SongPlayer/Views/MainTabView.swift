@@ -10,7 +10,8 @@ struct MainTabView: View {
                 NavigationStack {
                     PlayerView(
                         song: audioPlayer.currentSong ?? Song.placeholder,
-                        audioPlayer: audioPlayer
+                        audioPlayer: audioPlayer,
+                        onDismiss: { showFullPlayer = false }
                     )
                 }
             }
