@@ -28,6 +28,7 @@ final class AudioPlayerService {
 
     var playlist: [Song] = []
     var currentIndex: Int = 0
+    var autoPlayEnabled: Bool = true
 
     init() {
         configureAudioSession()
@@ -182,7 +183,13 @@ final class AudioPlayerService {
         ) { [weak self] _ in
             Task { @MainActor in
                 guard let self else { return }
-                self.playNext()
+                if self.autoPlayEnabled {
+                    self.playNext()
+                } else {
+                    self.state = .idle
+                    self.currentTime = self.duration
+                    self.updateNowPlayingInfo()
+                }
             }
         }
     }

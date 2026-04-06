@@ -1,5 +1,12 @@
 import SwiftUI
 
+private struct TextWidthKey: PreferenceKey {
+    static let defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = max(value, nextValue())
+    }
+}
+
 struct MarqueeText: View {
     let text: String
     let font: Font
@@ -9,80 +16,82 @@ struct MarqueeText: View {
     @State private var textWidth: CGFloat = 0
     @State private var containerWidth: CGFloat = 0
     @State private var offset: CGFloat = 0
-    @State private var animating = false
+    @State private var animationTask: Task<Void, Never>?
 
-    private var needsScroll: Bool {
-        textWidth > containerWidth
+    private var overflows: Bool {
+        containerWidth > 0 && textWidth > containerWidth
     }
 
     var body: some View {
         GeometryReader { geo in
-            let containerW = geo.size.width
-            Text(text)
-                .font(font)
-                .fontWeight(fontWeight)
-                .foregroundStyle(color)
-                .fixedSize()
+            styledText
+                .fixedSize(horizontal: true, vertical: false)
                 .offset(x: offset)
-                .onAppear {
-                    containerWidth = containerW
-                }
-                .onChange(of: containerW) {
-                    containerWidth = containerW
-                }
-                .background {
-                    Text(text)
-                        .font(font)
-                        .fontWeight(fontWeight)
-                        .fixedSize()
+                // Measure text natural width
+                .background(
+                    styledText
+                        .fixedSize(horizontal: true, vertical: false)
                         .hidden()
-                        .background(GeometryReader { textGeo in
-                            Color.clear.onAppear {
-                                textWidth = textGeo.size.width
-                                startAnimationIfNeeded()
-                            }
+                        .overlay(GeometryReader { textGeo in
+                            Color.clear.preference(
+                                key: TextWidthKey.self,
+                                value: textGeo.size.width
+                            )
                         })
+                )
+                .onPreferenceChange(TextWidthKey.self) { width in
+                    textWidth = width
+                    containerWidth = geo.size.width
+                    scheduleAnimation()
+                }
+                .onAppear {
+                    containerWidth = geo.size.width
                 }
                 .onChange(of: text) {
                     offset = 0
-                    animating = false
-                    Task {
-                        try? await Task.sleep(for: .seconds(0.5))
-                        textWidth = 0 // reset, will be recalculated
-                    }
+                    animationTask?.cancel()
+                    animationTask = nil
+                    scheduleAnimation()
                 }
         }
-        .frame(height: 30)
+        .frame(height: 34)
         .clipped()
     }
 
-    private func startAnimationIfNeeded() {
-        guard needsScroll, !animating else { return }
-        animating = true
-        let scrollDistance = textWidth - containerWidth + 16
+    private var styledText: some View {
+        Text(text)
+            .font(font)
+            .fontWeight(fontWeight)
+            .foregroundStyle(color)
+            .lineLimit(1)
+    }
 
-        Task { @MainActor in
-            // Wait before starting
+    private func scheduleAnimation() {
+        animationTask?.cancel()
+        guard overflows else { return }
+
+        let scrollDistance = textWidth - containerWidth + 8
+
+        animationTask = Task { @MainActor in
+            // Initial pause before first scroll
             try? await Task.sleep(for: .seconds(2))
-            guard animating else { return }
+            guard !Task.isCancelled, overflows else { return }
 
-            // Scroll left
-            withAnimation(.linear(duration: Double(scrollDistance) / 30.0)) {
-                offset = -scrollDistance
+            while !Task.isCancelled {
+                // Scroll left
+                let duration = max(3.0, Double(scrollDistance) / 40.0)
+                withAnimation(.linear(duration: duration)) {
+                    offset = -scrollDistance
+                }
+                try? await Task.sleep(for: .seconds(duration + 1.0))
+                guard !Task.isCancelled else { break }
+
+                // Snap back instantly then pause
+                withAnimation(.easeIn(duration: 0.4)) {
+                    offset = 0
+                }
+                try? await Task.sleep(for: .seconds(2.0))
             }
-
-            // Wait at the end
-            try? await Task.sleep(for: .seconds(Double(scrollDistance) / 30.0 + 1.5))
-            guard animating else { return }
-
-            // Jump back
-            withAnimation(.easeOut(duration: 0.3)) {
-                offset = 0
-            }
-
-            try? await Task.sleep(for: .seconds(1))
-            animating = false
-            startAnimationIfNeeded()
         }
     }
 }

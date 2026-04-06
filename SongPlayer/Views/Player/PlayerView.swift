@@ -9,7 +9,6 @@ struct PlayerView: View {
     @State private var showMoreSheet = false
     @State private var isDragging = false
     @State private var dragProgress: Double = 0
-    @State private var isRepeatOn = false
 
     private var activeSong: Song {
         audioPlayer.currentSong ?? song
@@ -17,13 +16,10 @@ struct PlayerView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            Spacer()
-                .frame(height: 16)
-
             artworkView
 
             Spacer()
-                .frame(minHeight: 16, maxHeight: .infinity)
+                .frame(height: 32)
 
             songInfoView
 
@@ -33,12 +29,12 @@ struct PlayerView: View {
             timelineView
 
             Spacer()
-                .frame(height: 24)
+                .frame(height: 28)
 
             controlsView
 
             Spacer()
-                .frame(height: 32)
+                .frame(height: 40)
         }
         .padding(.horizontal, 24)
         .navigationBarTitleDisplayMode(.inline)
@@ -46,9 +42,7 @@ struct PlayerView: View {
         .toolbarBackground(.hidden, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                Button {
-                    dismiss()
-                } label: {
+                Button { dismiss() } label: {
                     Image(systemName: "chevron.left")
                         .fontWeight(.semibold)
                 }
@@ -60,9 +54,7 @@ struct PlayerView: View {
                     .lineLimit(1)
             }
             ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    showMoreSheet = true
-                } label: {
+                Button { showMoreSheet = true } label: {
                     Image(systemName: "ellipsis")
                         .fontWeight(.bold)
                 }
@@ -80,33 +72,33 @@ struct PlayerView: View {
         }
     }
 
-    // MARK: - Subviews
+    // MARK: - Artwork
 
     private var artworkView: some View {
-        AsyncImage(url: URL(string: activeSong.artworkUrlLarge ?? "")) { phase in
-            switch phase {
-            case .success(let image):
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-            case .failure:
-                artworkPlaceholder
-            case .empty:
-                artworkPlaceholder
-                    .overlay(ProgressView().tint(.white))
-            @unknown default:
-                artworkPlaceholder
+        GeometryReader { geo in
+            AsyncImage(url: URL(string: activeSong.artworkUrlLarge ?? "")) { phase in
+                switch phase {
+                case .success(let image):
+                    image.resizable().aspectRatio(contentMode: .fit)
+                case .failure, .empty:
+                    artworkPlaceholder
+                @unknown default:
+                    artworkPlaceholder
+                }
             }
+            .frame(width: geo.size.width, height: geo.size.width)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .shadow(radius: 20)
         }
-        .frame(maxWidth: .infinity)
         .aspectRatio(1, contentMode: .fit)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .shadow(radius: 20)
+        .padding(.top, 8)
         .accessibilityLabel("Album artwork")
     }
 
+    // MARK: - Song Info
+
     private var songInfoView: some View {
-        HStack(alignment: .bottom) {
+        HStack(alignment: .center) {
             VStack(alignment: .leading, spacing: 4) {
                 MarqueeText(
                     text: activeSong.trackName,
@@ -114,7 +106,6 @@ struct PlayerView: View {
                     fontWeight: .bold,
                     color: Color(.label)
                 )
-
                 Text(activeSong.artistName)
                     .font(.body)
                     .foregroundStyle(Color(.secondaryLabel))
@@ -123,16 +114,21 @@ struct PlayerView: View {
 
             Spacer(minLength: 12)
 
+            // Auto-play toggle — white always, icon reflects state
             Button {
-                isRepeatOn.toggle()
+                audioPlayer.autoPlayEnabled.toggle()
             } label: {
-                Image(systemName: isRepeatOn ? "repeat" : "minus.arrow.trianglehead.clockwise")
+                Image(systemName: audioPlayer.autoPlayEnabled
+                      ? "repeat"
+                      : "minus.arrow.trianglehead.counterclockwise")
                     .font(.title3)
-                    .foregroundStyle(isRepeatOn ? Color(.label) : Color(.secondaryLabel))
+                    .foregroundStyle(.white)
             }
-            .accessibilityLabel(isRepeatOn ? "Repeat on" : "Repeat off")
+            .accessibilityLabel(audioPlayer.autoPlayEnabled ? "Auto-play on" : "Auto-play off")
         }
     }
+
+    // MARK: - Timeline
 
     private var timelineView: some View {
         VStack(spacing: 6) {
@@ -169,6 +165,8 @@ struct PlayerView: View {
         .accessibilityElement(children: .combine)
         .accessibilityLabel("Song progress: \(formatTime(audioPlayer.currentTime)) of \(formatTime(audioPlayer.duration))")
     }
+
+    // MARK: - Controls
 
     private var controlsView: some View {
         HStack(spacing: 40) {
@@ -217,13 +215,9 @@ struct PlayerView: View {
             }
     }
 
-    // MARK: - Helpers
-
     private func formatTime(_ seconds: TimeInterval) -> String {
         guard !seconds.isNaN && seconds >= 0 else { return "0:00" }
         let totalSeconds = Int(seconds)
-        let minutes = totalSeconds / 60
-        let secs = totalSeconds % 60
-        return String(format: "%d:%02d", minutes, secs)
+        return String(format: "%d:%02d", totalSeconds / 60, totalSeconds % 60)
     }
 }
