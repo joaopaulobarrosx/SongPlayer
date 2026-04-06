@@ -8,6 +8,7 @@ struct AlbumView: View {
 
     @State private var viewModel = AlbumViewModel()
     @State private var selectedSong: Song?
+    @State private var playerDragOffset: CGFloat = 0
 
     var body: some View {
         Group {
@@ -29,7 +30,8 @@ struct AlbumView: View {
             await viewModel.loadAlbum(collectionId: collectionId)
         }
         .navigationDestination(item: $selectedSong) { song in
-            PlayerView(song: song, audioPlayer: audioPlayer)
+            PlayerView(song: song, audioPlayer: audioPlayer, dragOffset: $playerDragOffset)
+                .offset(y: playerDragOffset)
         }
     }
 

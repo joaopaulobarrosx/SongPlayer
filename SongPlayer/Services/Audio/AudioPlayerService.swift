@@ -142,10 +142,13 @@ final class AudioPlayerService {
 
         cleanup()
         currentSong = song
+        currentTime = 0
+        duration = 0
         state = .loading
 
         let playerItem = AVPlayerItem(url: url)
         player = AVPlayer(playerItem: playerItem)
+        player?.automaticallyWaitsToMinimizeStalling = false
 
         statusObservation = playerItem.observe(\.status) { [weak self] item, _ in
             Task { @MainActor in
@@ -233,9 +236,13 @@ final class AudioPlayerService {
 
     func seek(to progress: Double) {
         guard let player, duration > 0 else { return }
-        let time = CMTime(seconds: progress * duration, preferredTimescale: 600)
+        let targetTime = progress * duration
+        let time = CMTime(seconds: targetTime, preferredTimescale: 600)
+        currentTime = targetTime
         player.seek(to: time)
-        currentTime = progress * duration
+        if state == .playing {
+            player.play()
+        }
         updateNowPlayingInfo()
     }
 

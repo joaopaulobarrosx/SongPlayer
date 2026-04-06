@@ -3,17 +3,22 @@ import SwiftUI
 struct MainTabView: View {
     @State private var audioPlayer = AudioPlayerService()
     @State private var showFullPlayer = false
+    @State private var playerDragOffset: CGFloat = 0
 
     var body: some View {
         SongsView(audioPlayer: audioPlayer)
-            .fullScreenCover(isPresented: $showFullPlayer) {
+            .fullScreenCover(isPresented: $showFullPlayer, onDismiss: {
+                playerDragOffset = 0
+            }) {
                 NavigationStack {
                     PlayerView(
                         song: audioPlayer.currentSong ?? Song.placeholder,
                         audioPlayer: audioPlayer,
-                        onDismiss: { showFullPlayer = false }
+                        onDismiss: { showFullPlayer = false },
+                        dragOffset: $playerDragOffset
                     )
                 }
+                .offset(y: playerDragOffset)
             }
             .environment(\.openFullPlayer, { showFullPlayer = true })
     }

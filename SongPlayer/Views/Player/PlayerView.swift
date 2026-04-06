@@ -10,7 +10,10 @@ struct PlayerView: View {
     @State private var showMoreSheet = false
     @State private var isDragging = false
     @State private var dragProgress: Double = 0
-    @State private var dragOffset: CGFloat = 0
+    @State private var seekTarget: Double?
+    @State private var didSetDuringEdit = false
+    @Binding var dragOffset: CGFloat
+    @State private var isDismissGesture: Bool? = nil
 
     private func dismissPlayer() {
         if let onDismiss {
@@ -47,16 +50,23 @@ struct PlayerView: View {
                 .frame(height: 40)
         }
         .padding(.horizontal, 24)
-        .offset(y: dragOffset)
         .simultaneousGesture(
             DragGesture(minimumDistance: 30, coordinateSpace: .global)
                 .onChanged { value in
-                    let translation = value.translation.height
-                    // Only track downward drags
-                    guard translation > 0 else { return }
-                    dragOffset = translation * (1 - min(translation / 600, 0.5))
+                    let t = value.translation
+                    // Determine gesture direction on first movement
+                    if isDismissGesture == nil {
+                        let isDownward = t.height > 0
+                        let isPrimarilyVertical = abs(t.height) > abs(t.width)
+                        isDismissGesture = isDownward && isPrimarilyVertical
+                    }
+                    guard isDismissGesture == true else { return }
+                    let vertical = t.height
+                    dragOffset = vertical * (1 - min(vertical / 600, 0.5))
                 }
                 .onEnded { value in
+                    defer { isDismissGesture = nil }
+                    guard isDismissGesture == true else { return }
                     let velocity = value.velocity.height
                     let translation = value.translation.height
                     if translation > 120 || velocity > 800 {
@@ -169,33 +179,52 @@ struct PlayerView: View {
 
     // MARK: - Timeline
 
+    private var displayProgress: Double {
+        if isDragging { return dragProgress }
+        if let target = seekTarget { return target }
+        return audioPlayer.progress
+    }
+
     private var timelineView: some View {
         VStack(spacing: 6) {
             Slider(
                 value: Binding(
-                    get: { isDragging ? dragProgress : audioPlayer.progress },
+                    get: { displayProgress },
                     set: { newValue in
                         isDragging = true
+                        didSetDuringEdit = true
                         dragProgress = newValue
                     }
                 ),
                 in: 0...1,
                 onEditingChanged: { editing in
-                    if !editing {
-                        audioPlayer.seek(to: dragProgress)
+                    if editing {
+                        isDragging = true
+                        didSetDuringEdit = false
+                    } else {
+                        if didSetDuringEdit {
+                            audioPlayer.seek(to: dragProgress)
+                            seekTarget = dragProgress
+                        }
                         isDragging = false
                     }
                 }
             )
             .tint(Color(.label))
+            .onChange(of: audioPlayer.currentTime) {
+                guard let target = seekTarget else { return }
+                if abs(audioPlayer.progress - target) < 0.05 || audioPlayer.progress > target {
+                    seekTarget = nil
+                }
+            }
 
             HStack {
-                Text(formatTime(isDragging ? dragProgress * audioPlayer.duration : audioPlayer.currentTime))
+                Text(formatTime(displayProgress * audioPlayer.duration))
                     .font(.caption2)
                     .foregroundStyle(Color(.secondaryLabel))
                     .monospacedDigit()
                 Spacer()
-                Text("-\(formatTime(audioPlayer.duration - (isDragging ? dragProgress * audioPlayer.duration : audioPlayer.currentTime)))")
+                Text("-\(formatTime(audioPlayer.duration - displayProgress * audioPlayer.duration))")
                     .font(.caption2)
                     .foregroundStyle(Color(.secondaryLabel))
                     .monospacedDigit()
