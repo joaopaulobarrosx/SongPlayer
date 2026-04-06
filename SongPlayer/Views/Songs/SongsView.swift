@@ -5,8 +5,6 @@ struct SongsView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var viewModel = SongsViewModel()
     @Bindable var audioPlayer: AudioPlayerService
-    @State private var selectedSong: Song?
-    @State private var showMoreSheet = false
     @State private var moreSheetSong: Song?
     @State private var navigateToAlbum: Int?
 
@@ -32,6 +30,7 @@ struct SongsView: View {
                 }
             }
             .listStyle(.plain)
+            .scrollDismissesKeyboard(.interactively)
             .navigationTitle("Songs")
             .refreshable {
                 viewModel.searchSongs()
@@ -50,18 +49,8 @@ struct SongsView: View {
                     ContentUnavailableView.search(text: viewModel.searchText)
                 }
             }
-            .navigationDestination(item: $selectedSong) { song in
-                PlayerView(
-                    song: song,
-                    audioPlayer: audioPlayer,
-                    onViewAlbum: { collectionId in
-                        selectedSong = nil
-                        Task {
-                            try? await Task.sleep(for: .milliseconds(300))
-                            navigateToAlbum = collectionId
-                        }
-                    }
-                )
+            .safeAreaInset(edge: .bottom) {
+                MiniPlayerView(audioPlayer: audioPlayer)
             }
             .navigationDestination(item: $navigateToAlbum) { collectionId in
                 AlbumView(collectionId: collectionId, audioPlayer: audioPlayer)
@@ -114,12 +103,7 @@ struct SongsView: View {
     private var recentlyPlayedSection: some View {
         Section {
             ForEach(viewModel.recentlyPlayed) { song in
-                SongRowView(song: song) {
-                    moreSheetSong = song
-                }
-                .onTapGesture {
-                    playSong(song, from: viewModel.recentlyPlayed)
-                }
+                songRow(song: song, playlist: viewModel.recentlyPlayed)
             }
         } header: {
             Text("Recently Played")
@@ -132,16 +116,27 @@ struct SongsView: View {
     private var searchResultsSection: some View {
         Section {
             ForEach(viewModel.songs) { song in
-                SongRowView(song: song) {
-                    moreSheetSong = song
-                }
-                .onTapGesture {
-                    playSong(song, from: viewModel.songs)
-                }
-                .onAppear {
-                    viewModel.loadMoreIfNeeded(currentSong: song)
-                }
+                songRow(song: song, playlist: viewModel.songs)
+                    .onAppear {
+                        viewModel.loadMoreIfNeeded(currentSong: song)
+                    }
             }
+        }
+    }
+
+    private func songRow(song: Song, playlist: [Song]) -> some View {
+        let isCurrent = audioPlayer.currentSong?.id == song.id && audioPlayer.state != .idle
+        let isPlaying = isCurrent && audioPlayer.state == .playing
+
+        return SongRowView(
+            song: song,
+            isPlaying: isPlaying,
+            isCurrentSong: isCurrent
+        ) {
+            moreSheetSong = song
+        }
+        .onTapGesture {
+            playSong(song, from: playlist)
         }
     }
 
@@ -178,6 +173,5 @@ struct SongsView: View {
         audioPlayer.play(song: song, playlist: playlist, index: index)
         viewModel.markAsPlayed(song: song, modelContext: modelContext)
         viewModel.cacheSongs(playlist, modelContext: modelContext)
-        selectedSong = song
     }
 }

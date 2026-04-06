@@ -27,6 +27,14 @@ nonisolated struct Song: Codable, Sendable, Identifiable, Hashable {
         artworkUrl100?.replacingOccurrences(of: "100x100", with: "600x600")
     }
 
+    static let placeholder = Song(
+        trackId: 0, trackName: "", artistName: "",
+        collectionName: nil, collectionId: nil, artworkUrl100: nil,
+        previewUrl: nil, trackTimeMillis: nil, trackNumber: nil,
+        discNumber: nil, collectionPrice: nil, trackPrice: nil,
+        primaryGenreName: nil, releaseDate: nil
+    )
+
     var formattedDuration: String {
         guard let millis = trackTimeMillis else { return "--:--" }
         let totalSeconds = millis / 1000
