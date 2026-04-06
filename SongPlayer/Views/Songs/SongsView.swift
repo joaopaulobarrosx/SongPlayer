@@ -96,7 +96,7 @@ struct SongsView: View {
                 }
             }
             .padding(10)
-            .background(.quaternary, in: RoundedRectangle(cornerRadius: 10))
+            .background(Color.white.opacity(0.1), in: RoundedRectangle(cornerRadius: 10))
         }
         .listRowSeparator(.hidden)
         .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
@@ -113,11 +113,6 @@ struct SongsView: View {
                     viewModel.removeRecentlyPlayed(song: song, modelContext: modelContext)
                 }
             }
-        } header: {
-            Text("Recently Played")
-                .font(.headline)
-                .foregroundStyle(.primary)
-                .textCase(nil)
         }
     }
 

@@ -18,11 +18,12 @@ struct PlayerView: View {
     var body: some View {
         VStack(spacing: 0) {
             Spacer()
+                .frame(height: 16)
 
             artworkView
 
             Spacer()
-                .frame(minHeight: 24, maxHeight: .infinity)
+                .frame(minHeight: 16, maxHeight: .infinity)
 
             songInfoView
 
@@ -39,7 +40,7 @@ struct PlayerView: View {
             Spacer()
                 .frame(height: 32)
         }
-        .padding(.horizontal, 32)
+        .padding(.horizontal, 24)
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbarBackground(.hidden, for: .navigationBar)
@@ -48,7 +49,7 @@ struct PlayerView: View {
                 Button {
                     dismiss()
                 } label: {
-                    Image(systemName: "chevron.down")
+                    Image(systemName: "chevron.left")
                         .fontWeight(.semibold)
                 }
             }
@@ -107,20 +108,21 @@ struct PlayerView: View {
     private var songInfoView: some View {
         HStack(alignment: .bottom) {
             VStack(alignment: .leading, spacing: 4) {
-                Text(activeSong.trackName)
-                    .font(.title2)
-                    .fontWeight(.bold)
-                    .foregroundStyle(Color(.label))
-                    .lineLimit(1)
+                MarqueeText(
+                    text: activeSong.trackName,
+                    font: .title2,
+                    fontWeight: .bold,
+                    color: Color(.label)
+                )
+
                 Text(activeSong.artistName)
                     .font(.body)
                     .foregroundStyle(Color(.secondaryLabel))
                     .lineLimit(1)
             }
 
-            Spacer()
+            Spacer(minLength: 12)
 
-            // Repeat toggle button
             Button {
                 isRepeatOn.toggle()
             } label: {
