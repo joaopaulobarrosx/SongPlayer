@@ -30,17 +30,17 @@ struct PlayerView: View {
             artworkView
 
             Spacer()
-                .frame(height: 32)
+                .frame(height: 56)
 
             songInfoView
 
             Spacer()
-                .frame(height: 20)
+                .frame(height: 28)
 
             timelineView
 
             Spacer()
-                .frame(height: 28)
+                .frame(height: 44)
 
             controlsView
 
@@ -96,8 +96,8 @@ struct PlayerView: View {
             }
             ToolbarItem(placement: .principal) {
                 Text(activeSong.collectionName ?? "")
-                    .font(.subheadline)
-                    .fontWeight(.medium)
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundStyle(.white)
                     .lineLimit(1)
             }
             ToolbarItem(placement: .topBarTrailing) {
@@ -149,13 +149,13 @@ struct PlayerView: View {
             VStack(alignment: .leading, spacing: 4) {
                 MarqueeText(
                     text: activeSong.trackName,
-                    font: .title2,
+                    font: .system(size: 32),
                     fontWeight: .bold,
-                    color: Color(.label)
+                    color: .white
                 )
                 Text(activeSong.artistName)
                     .font(.body)
-                    .foregroundStyle(Color(.secondaryLabel))
+                    .foregroundStyle(Color.white.opacity(0.6))
                     .lineLimit(1)
             }
 
@@ -168,7 +168,9 @@ struct PlayerView: View {
                 Image(systemName: audioPlayer.autoPlayEnabled
                       ? "repeat"
                       : "minus.arrow.trianglehead.counterclockwise")
-                    .font(.title3)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 24, height: 24)
                     .foregroundStyle(.white)
             }
             .accessibilityLabel(audioPlayer.autoPlayEnabled ? "Auto-play on" : "Auto-play off")
@@ -190,7 +192,7 @@ struct PlayerView: View {
                 let filledWidth = max(0, min(trackWidth, trackWidth * displayProgress))
                 ZStack(alignment: .leading) {
                     Capsule()
-                        .fill(Color.white.opacity(0.6))
+                        .fill(Color.white.opacity(0.25))
                         .frame(height: trackHeight)
                     Capsule()
                         .fill(Color.white)
@@ -221,13 +223,13 @@ struct PlayerView: View {
 
             HStack {
                 Text(formatTime(displayProgress * audioPlayer.duration))
-                    .font(.caption2)
-                    .foregroundStyle(Color(.secondaryLabel))
+                    .font(.system(size: 14))
+                    .foregroundStyle(Color.white.opacity(0.6))
                     .monospacedDigit()
                 Spacer()
                 Text("-\(formatTime(audioPlayer.duration - displayProgress * audioPlayer.duration))")
-                    .font(.caption2)
-                    .foregroundStyle(Color(.secondaryLabel))
+                    .font(.system(size: 14))
+                    .foregroundStyle(Color.white.opacity(0.6))
                     .monospacedDigit()
             }
         }
@@ -242,9 +244,9 @@ struct PlayerView: View {
             Button {
                 audioPlayer.playPrevious()
             } label: {
-                Image(systemName: "backward.fill")
-                    .font(.title2)
-                    .foregroundStyle(Color(.label))
+                Image(systemName: "backward.end.alt.fill")
+                    .font(.system(size: 28))
+                    .foregroundStyle(.white)
             }
             .accessibilityLabel("Previous")
 
@@ -253,11 +255,28 @@ struct PlayerView: View {
             } label: {
                 ZStack {
                     Circle()
-                        .fill(Color.white.opacity(0.2))
+                        .fill(Color.white.opacity(0.12))
+                        .overlay(
+                            Circle()
+                                .strokeBorder(
+                                    LinearGradient(
+                                        colors: [
+                                            Color.white.opacity(0.6),
+                                            Color.white.opacity(0.05),
+                                            Color.white.opacity(0.6)
+                                        ],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    ),
+                                    lineWidth: 1.5
+                                )
+                        )
                         .frame(width: 72, height: 72)
                     Image(systemName: audioPlayer.state == .playing ? "pause.fill" : "play.fill")
-                        .font(.system(size: 28, weight: .bold))
-                        .foregroundStyle(Color(.label))
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 25, height: 28.5)
+                        .foregroundStyle(.white)
                 }
             }
             .buttonStyle(.plain)
@@ -266,9 +285,9 @@ struct PlayerView: View {
             Button {
                 audioPlayer.playNext()
             } label: {
-                Image(systemName: "forward.fill")
-                    .font(.title2)
-                    .foregroundStyle(Color(.label))
+                Image(systemName: "forward.end.alt.fill")
+                    .font(.system(size: 28))
+                    .foregroundStyle(.white)
             }
             .accessibilityLabel("Next")
         }
