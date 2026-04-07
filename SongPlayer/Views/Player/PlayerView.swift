@@ -255,7 +255,7 @@ struct PlayerView: View {
             } label: {
                 ZStack {
                     Circle()
-                        .fill(Color.white.opacity(0.12))
+                        .fill(Color.white.opacity(0.20))
                         .overlay(
                             Circle()
                                 .strokeBorder(

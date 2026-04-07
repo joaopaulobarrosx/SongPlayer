@@ -5,6 +5,7 @@ struct SongsView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var viewModel = SongsViewModel()
     @Bindable var audioPlayer: AudioPlayerService
+    @Binding var pendingAlbumId: Int?
     @State private var moreSheetSong: Song?
     @State private var navigateToAlbum: Int?
     @FocusState private var isSearchFocused: Bool
@@ -55,6 +56,12 @@ struct SongsView: View {
             }
             .navigationDestination(item: $navigateToAlbum) { collectionId in
                 AlbumView(collectionId: collectionId, audioPlayer: audioPlayer)
+            }
+            .onChange(of: pendingAlbumId) { _, newValue in
+                if let id = newValue {
+                    navigateToAlbum = id
+                    pendingAlbumId = nil
+                }
             }
             .sheet(item: $moreSheetSong) { song in
                 MoreOptionsSheet(song: song) {
