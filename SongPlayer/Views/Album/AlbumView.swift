@@ -7,6 +7,7 @@ struct AlbumView: View {
     @Environment(\.modelContext) private var modelContext
 
     @State private var viewModel = AlbumViewModel()
+    @State private var songsViewModel = SongsViewModel()
     @State private var selectedSong: Song?
     @State private var playerDragOffset: CGFloat = 0
     @Environment(\.dismiss) private var dismiss
@@ -134,6 +135,7 @@ struct AlbumView: View {
                 .onTapGesture {
                     let index = viewModel.songs.firstIndex(where: { $0.id == song.id }) ?? 0
                     audioPlayer.play(song: song, playlist: viewModel.songs, index: index)
+                    songsViewModel.markAsPlayed(song: song, modelContext: modelContext)
                 }
                 .accessibilityLabel("\(song.trackName) by \(song.artistName)")
 
