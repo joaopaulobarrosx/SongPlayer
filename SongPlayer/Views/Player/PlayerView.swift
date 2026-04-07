@@ -8,6 +8,8 @@ struct PlayerView: View {
 
     @Environment(\.dismiss) private var environmentDismiss
     @State private var showMoreSheet = false
+    @State private var albumHasTracks = false
+    private let networkService: NetworkServiceProtocol = NetworkService()
     @State private var isDragging = false
     @State private var dragProgress: Double = 0
     @Binding var dragOffset: CGFloat
@@ -101,7 +103,20 @@ struct PlayerView: View {
                     .lineLimit(1)
             }
             ToolbarItem(placement: .topBarTrailing) {
-                Button { showMoreSheet = true } label: {
+                Button {
+                    albumHasTracks = false
+                    showMoreSheet = true
+                    if let collectionId = activeSong.collectionId {
+                        Task {
+                            do {
+                                let response = try await networkService.lookupAlbum(collectionId: collectionId)
+                                albumHasTracks = response.results.contains { $0.trackTimeMillis != nil }
+                            } catch {
+                                albumHasTracks = false
+                            }
+                        }
+                    }
+                } label: {
                     Image(systemName: "ellipsis")
                         .fontWeight(.bold)
                 }
@@ -110,7 +125,7 @@ struct PlayerView: View {
         .sheet(isPresented: $showMoreSheet) {
             MoreOptionsSheet(song: activeSong) {
                 showMoreSheet = false
-                if let collectionId = activeSong.collectionId {
+                if albumHasTracks, let collectionId = activeSong.collectionId {
                     onViewAlbum?(collectionId)
                 }
             }

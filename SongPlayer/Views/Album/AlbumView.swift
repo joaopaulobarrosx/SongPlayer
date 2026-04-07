@@ -9,6 +9,7 @@ struct AlbumView: View {
     @State private var viewModel = AlbumViewModel()
     @State private var selectedSong: Song?
     @State private var playerDragOffset: CGFloat = 0
+    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         Group {

@@ -8,6 +8,8 @@ struct SongsView: View {
     @Binding var pendingAlbumId: Int?
     @State private var moreSheetSong: Song?
     @State private var navigateToAlbum: Int?
+    @State private var albumHasTracks = false
+    private let networkService: NetworkServiceProtocol = NetworkService()
     @FocusState private var isSearchFocused: Bool
 
     var body: some View {
@@ -66,7 +68,7 @@ struct SongsView: View {
             .sheet(item: $moreSheetSong) { song in
                 MoreOptionsSheet(song: song) {
                     moreSheetSong = nil
-                    if let collectionId = song.collectionId {
+                    if albumHasTracks, let collectionId = song.collectionId {
                         navigateToAlbum = collectionId
                     }
                 }
@@ -143,7 +145,18 @@ struct SongsView: View {
             isPlaying: isPlaying,
             isCurrentSong: isCurrent
         ) {
+            albumHasTracks = false
             moreSheetSong = song
+            if let collectionId = song.collectionId {
+                Task {
+                    do {
+                        let response = try await networkService.lookupAlbum(collectionId: collectionId)
+                        albumHasTracks = response.results.contains { $0.trackTimeMillis != nil }
+                    } catch {
+                        albumHasTracks = false
+                    }
+                }
+            }
         }
         .onTapGesture {
             playSong(song, from: playlist)
