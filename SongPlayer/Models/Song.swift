@@ -3,7 +3,34 @@ import Foundation
 nonisolated struct iTunesSearchResponse: Codable, Sendable {
     let resultCount: Int
     let results: [Song]
+
+    enum CodingKeys: String, CodingKey {
+        case resultCount, results
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.resultCount = (try? container.decode(Int.self, forKey: .resultCount)) ?? 0
+        // Lookup endpoint mixes a collection entry with track entries; decode leniently and skip failures.
+        var results: [Song] = []
+        var arrayContainer = try container.nestedUnkeyedContainer(forKey: .results)
+        while !arrayContainer.isAtEnd {
+            if let song = try? arrayContainer.decode(Song.self) {
+                results.append(song)
+            } else {
+                _ = try? arrayContainer.decode(AnyDecodable.self)
+            }
+        }
+        self.results = results
+    }
+
+    init(resultCount: Int, results: [Song]) {
+        self.resultCount = resultCount
+        self.results = results
+    }
 }
+
+nonisolated private struct AnyDecodable: Decodable {}
 
 nonisolated struct Song: Codable, Sendable, Identifiable, Hashable {
     let trackId: Int
