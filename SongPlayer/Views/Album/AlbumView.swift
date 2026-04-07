@@ -130,10 +130,6 @@ struct AlbumView: View {
                 }
                 .accessibilityLabel("\(song.trackName) by \(song.artistName)")
 
-                if song.id != viewModel.songs.last?.id {
-                    Divider()
-                        .padding(.leading, 68)
-                }
             }
         }
     }
