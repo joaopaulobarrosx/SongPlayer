@@ -88,6 +88,8 @@ struct AlbumView: View {
     private var songsList: some View {
         LazyVStack(spacing: 0) {
             ForEach(viewModel.songs) { song in
+                let isCurrent = audioPlayer.currentSong?.id == song.id && audioPlayer.state != .idle
+                let isPlaying = isCurrent && audioPlayer.state == .playing
                 HStack(spacing: 12) {
                     AsyncImage(url: URL(string: song.artworkUrl100 ?? "")) { phase in
                         switch phase {
@@ -109,9 +111,15 @@ struct AlbumView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 4))
 
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(song.trackName)
-                            .font(.body)
-                            .lineLimit(1)
+                        HStack(spacing: 6) {
+                            if isCurrent {
+                                NowPlayingIcon(isPlaying: isPlaying)
+                            }
+                            Text(song.trackName)
+                                .font(.body)
+                                .lineLimit(1)
+                                .foregroundStyle(isCurrent ? .green : .primary)
+                        }
                         Text(song.artistName)
                             .font(.caption)
                             .foregroundStyle(.secondary)
