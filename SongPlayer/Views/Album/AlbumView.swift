@@ -25,6 +25,9 @@ struct AlbumView: View {
                 albumContent
             }
         }
+        .safeAreaInset(edge: .bottom) {
+            MiniPlayerView(audioPlayer: audioPlayer)
+        }
         .navigationBarTitleDisplayMode(.inline)
         .task {
             await viewModel.loadAlbum(collectionId: collectionId)
@@ -74,7 +77,7 @@ struct AlbumView: View {
 
                 Text(firstSong.artistName)
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.white)
             }
         }
         .padding(.top, 16)
@@ -84,53 +87,47 @@ struct AlbumView: View {
     private var songsList: some View {
         LazyVStack(spacing: 0) {
             ForEach(viewModel.songs) { song in
-                Button {
+                HStack(spacing: 12) {
+                    AsyncImage(url: URL(string: song.artworkUrl100 ?? "")) { phase in
+                        switch phase {
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                        default:
+                            RoundedRectangle(cornerRadius: 4)
+                                .fill(.quaternary)
+                                .overlay {
+                                    Image(systemName: "music.note")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
+                        }
+                    }
+                    .frame(width: 40, height: 40)
+                    .clipShape(RoundedRectangle(cornerRadius: 4))
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(song.trackName)
+                            .font(.body)
+                            .lineLimit(1)
+                        Text(song.artistName)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                    }
+
+                    Spacer()
+                }
+                .padding(.horizontal)
+                .padding(.vertical, 8)
+                .contentShape(Rectangle())
+                .onTapGesture {
                     let index = viewModel.songs.firstIndex(where: { $0.id == song.id }) ?? 0
                     audioPlayer.play(song: song, playlist: viewModel.songs, index: index)
                     selectedSong = song
-                } label: {
-                    HStack(spacing: 12) {
-                        AsyncImage(url: URL(string: song.artworkUrl100 ?? "")) { phase in
-                            switch phase {
-                            case .success(let image):
-                                image
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                            default:
-                                RoundedRectangle(cornerRadius: 4)
-                                    .fill(.quaternary)
-                                    .overlay {
-                                        Image(systemName: "music.note")
-                                            .font(.caption2)
-                                            .foregroundStyle(.secondary)
-                                    }
-                            }
-                        }
-                        .frame(width: 40, height: 40)
-                        .clipShape(RoundedRectangle(cornerRadius: 4))
-
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(song.trackName)
-                                .font(.body)
-                                .lineLimit(1)
-                            Text(song.artistName)
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                                .lineLimit(1)
-                        }
-
-                        Spacer()
-
-                        Text(song.formattedDuration)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                            .monospacedDigit()
-                    }
-                    .padding(.horizontal)
-                    .padding(.vertical, 8)
                 }
-                .buttonStyle(.plain)
-                .accessibilityLabel("\(song.trackName) by \(song.artistName), \(song.formattedDuration)")
+                .accessibilityLabel("\(song.trackName) by \(song.artistName)")
 
                 if song.id != viewModel.songs.last?.id {
                     Divider()

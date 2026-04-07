@@ -11,21 +11,38 @@ struct MainTabView: View {
             .fullScreenCover(isPresented: $showFullPlayer, onDismiss: {
                 playerDragOffset = 0
             }) {
-                NavigationStack {
-                    PlayerView(
-                        song: audioPlayer.currentSong ?? Song.placeholder,
-                        audioPlayer: audioPlayer,
-                        onDismiss: { showFullPlayer = false },
-                        onViewAlbum: { id in
-                            showFullPlayer = false
-                            pendingAlbumId = id
-                        },
-                        dragOffset: $playerDragOffset
-                    )
-                }
+                PlayerNavigationContainer(
+                    audioPlayer: audioPlayer,
+                    onDismiss: { showFullPlayer = false },
+                    playerDragOffset: $playerDragOffset
+                )
                 .offset(y: playerDragOffset)
             }
             .environment(\.openFullPlayer, { showFullPlayer = true })
+    }
+}
+
+// MARK: - Player navigation container
+
+private struct PlayerNavigationContainer: View {
+    @Bindable var audioPlayer: AudioPlayerService
+    var onDismiss: () -> Void
+    @Binding var playerDragOffset: CGFloat
+    @State private var albumDestination: Int?
+
+    var body: some View {
+        NavigationStack {
+            PlayerView(
+                song: audioPlayer.currentSong ?? Song.placeholder,
+                audioPlayer: audioPlayer,
+                onDismiss: onDismiss,
+                onViewAlbum: { albumDestination = $0 },
+                dragOffset: $playerDragOffset
+            )
+            .navigationDestination(item: $albumDestination) { id in
+                AlbumView(collectionId: id, audioPlayer: audioPlayer)
+            }
+        }
     }
 }
 

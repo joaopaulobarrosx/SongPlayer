@@ -111,7 +111,6 @@ struct PlayerView: View {
             MoreOptionsSheet(song: activeSong) {
                 showMoreSheet = false
                 if let collectionId = activeSong.collectionId {
-                    dismissPlayer()
                     onViewAlbum?(collectionId)
                 }
             }
