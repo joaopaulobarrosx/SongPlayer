@@ -142,7 +142,6 @@ final class SongsViewModel {
         }
 
         try? modelContext.save()
-        loadRecentlyPlayed(modelContext: modelContext)
     }
 
     func removeRecentlyPlayed(song: Song, modelContext: ModelContext) {

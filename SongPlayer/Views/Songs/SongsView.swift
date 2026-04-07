@@ -38,7 +38,8 @@ struct SongsView: View {
             .navigationTitle("Songs")
             .refreshable {
                 viewModel.searchSongs()
-                try? await Task.sleep(for: .milliseconds(500))
+                try? await Task.sleep(for: .milliseconds(800))
+                viewModel.loadRecentlyPlayed(modelContext: modelContext)
             }
             .overlay {
                 if viewModel.songs.isEmpty && viewModel.recentlyPlayed.isEmpty && viewModel.state == .idle {
