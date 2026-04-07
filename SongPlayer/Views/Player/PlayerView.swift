@@ -185,21 +185,22 @@ struct PlayerView: View {
         VStack(spacing: 6) {
             GeometryReader { geo in
                 let trackWidth = geo.size.width
-                let knobSize: CGFloat = 14
+                let knobSize: CGFloat = 24
+                let trackHeight: CGFloat = 8
                 let filledWidth = max(0, min(trackWidth, trackWidth * displayProgress))
                 ZStack(alignment: .leading) {
                     Capsule()
-                        .fill(Color(.label).opacity(0.25))
-                        .frame(height: 4)
+                        .fill(Color.white.opacity(0.6))
+                        .frame(height: trackHeight)
                     Capsule()
-                        .fill(Color(.label))
-                        .frame(width: filledWidth, height: 4)
+                        .fill(Color.white)
+                        .frame(width: filledWidth, height: trackHeight)
                     Circle()
-                        .fill(Color(.label))
+                        .fill(Color.white)
                         .frame(width: knobSize, height: knobSize)
                         .offset(x: filledWidth - knobSize / 2)
                 }
-                .frame(height: 24)
+                .frame(height: knobSize)
                 .contentShape(Rectangle())
                 .gesture(
                     DragGesture(minimumDistance: 0)
@@ -216,6 +217,7 @@ struct PlayerView: View {
                 )
             }
             .frame(height: 24)
+            .padding(.top, 4)
 
             HStack {
                 Text(formatTime(displayProgress * audioPlayer.duration))
