@@ -20,6 +20,8 @@ final class AudioPlayerService {
     nonisolated(unsafe) private var timeObserver: Any?
     private var statusObservation: NSKeyValueObservation?
     nonisolated(unsafe) private var didFinishObserver: NSObjectProtocol?
+    private var isSeeking = false
+    private var seekGuardTask: Task<Void, Never>?
 
     var progress: Double {
         guard duration > 0 else { return 0 }
@@ -175,6 +177,7 @@ final class AudioPlayerService {
                 guard let self else { return }
                 let seconds = time.seconds
                 guard !seconds.isNaN else { return }
+                if self.isSeeking { return }
                 self.currentTime = seconds
                 // Update lock screen at ~1fps (enough for the lock screen display)
                 if Int(seconds * 4) % 4 == 0 {
@@ -239,7 +242,19 @@ final class AudioPlayerService {
         let targetTime = progress * duration
         let time = CMTime(seconds: targetTime, preferredTimescale: 600)
         currentTime = targetTime
-        player.seek(to: time)
+        isSeeking = true
+        seekGuardTask?.cancel()
+        player.seek(to: time) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                self?.isSeeking = false
+            }
+        }
+        // Failsafe: never let isSeeking get stuck (e.g. if completion never fires)
+        seekGuardTask = Task { @MainActor [weak self] in
+            try? await Task.sleep(nanoseconds: 400_000_000)
+            guard let self, !Task.isCancelled else { return }
+            self.isSeeking = false
+        }
         if state == .playing {
             player.play()
         }
@@ -279,6 +294,9 @@ final class AudioPlayerService {
     }
 
     private func cleanup() {
+        seekGuardTask?.cancel()
+        seekGuardTask = nil
+        isSeeking = false
         if let timeObserver, let player {
             player.removeTimeObserver(timeObserver)
         }

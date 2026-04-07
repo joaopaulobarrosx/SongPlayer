@@ -10,8 +10,6 @@ struct PlayerView: View {
     @State private var showMoreSheet = false
     @State private var isDragging = false
     @State private var dragProgress: Double = 0
-    @State private var seekTarget: Double?
-    @State private var didSetDuringEdit = false
     @Binding var dragOffset: CGFloat
     @State private var isDismissGesture: Bool? = nil
 
@@ -180,43 +178,44 @@ struct PlayerView: View {
     // MARK: - Timeline
 
     private var displayProgress: Double {
-        if isDragging { return dragProgress }
-        if let target = seekTarget { return target }
-        return audioPlayer.progress
+        isDragging ? dragProgress : audioPlayer.progress
     }
 
     private var timelineView: some View {
         VStack(spacing: 6) {
-            Slider(
-                value: Binding(
-                    get: { displayProgress },
-                    set: { newValue in
-                        isDragging = true
-                        didSetDuringEdit = true
-                        dragProgress = newValue
-                    }
-                ),
-                in: 0...1,
-                onEditingChanged: { editing in
-                    if editing {
-                        isDragging = true
-                        didSetDuringEdit = false
-                    } else {
-                        if didSetDuringEdit {
-                            audioPlayer.seek(to: dragProgress)
-                            seekTarget = dragProgress
+            GeometryReader { geo in
+                let trackWidth = geo.size.width
+                let knobSize: CGFloat = 14
+                let filledWidth = max(0, min(trackWidth, trackWidth * displayProgress))
+                ZStack(alignment: .leading) {
+                    Capsule()
+                        .fill(Color(.label).opacity(0.25))
+                        .frame(height: 4)
+                    Capsule()
+                        .fill(Color(.label))
+                        .frame(width: filledWidth, height: 4)
+                    Circle()
+                        .fill(Color(.label))
+                        .frame(width: knobSize, height: knobSize)
+                        .offset(x: filledWidth - knobSize / 2)
+                }
+                .frame(height: 24)
+                .contentShape(Rectangle())
+                .gesture(
+                    DragGesture(minimumDistance: 0)
+                        .onChanged { value in
+                            isDragging = true
+                            dragProgress = max(0, min(1, value.location.x / trackWidth))
                         }
-                        isDragging = false
-                    }
-                }
-            )
-            .tint(Color(.label))
-            .onChange(of: audioPlayer.currentTime) {
-                guard let target = seekTarget else { return }
-                if abs(audioPlayer.progress - target) < 0.05 || audioPlayer.progress > target {
-                    seekTarget = nil
-                }
+                        .onEnded { value in
+                            let pct = max(0, min(1, value.location.x / trackWidth))
+                            dragProgress = pct
+                            audioPlayer.seek(to: pct)
+                            isDragging = false
+                        }
+                )
             }
+            .frame(height: 24)
 
             HStack {
                 Text(formatTime(displayProgress * audioPlayer.duration))
