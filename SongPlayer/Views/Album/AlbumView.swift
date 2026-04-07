@@ -134,7 +134,6 @@ struct AlbumView: View {
                 .onTapGesture {
                     let index = viewModel.songs.firstIndex(where: { $0.id == song.id }) ?? 0
                     audioPlayer.play(song: song, playlist: viewModel.songs, index: index)
-                    selectedSong = song
                 }
                 .accessibilityLabel("\(song.trackName) by \(song.artistName)")
 

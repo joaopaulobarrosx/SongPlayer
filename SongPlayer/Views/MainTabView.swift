@@ -43,6 +43,7 @@ private struct PlayerNavigationContainer: View {
                 AlbumView(collectionId: id, audioPlayer: audioPlayer)
             }
         }
+        .environment(\.openFullPlayer, { albumDestination = nil })
     }
 }
 
