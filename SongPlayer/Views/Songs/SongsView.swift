@@ -3,13 +3,24 @@ import SwiftData
 
 struct SongsView: View {
     @Environment(\.modelContext) private var modelContext
-    @State private var viewModel = SongsViewModel()
+    @State private var viewModel: SongsViewModel
     @Bindable var audioPlayer: AudioPlayerService
     @Binding var pendingAlbumId: Int?
     @State private var moreSheetSong: Song?
     @State private var navigateToAlbum: Int?
     @State private var albumHasTracks = false
-    private let networkService: NetworkServiceProtocol = NetworkService()
+    private let networkService: NetworkServiceProtocol
+
+    init(
+        audioPlayer: AudioPlayerService,
+        pendingAlbumId: Binding<Int?>,
+        networkService: NetworkServiceProtocol = NetworkService()
+    ) {
+        self.audioPlayer = audioPlayer
+        self._pendingAlbumId = pendingAlbumId
+        self.networkService = networkService
+        self._viewModel = State(initialValue: SongsViewModel(networkService: networkService))
+    }
     @FocusState private var isSearchFocused: Bool
 
     var body: some View {
@@ -31,6 +42,10 @@ struct SongsView: View {
 
                 if case .error(let message) = viewModel.state {
                     errorRow(message)
+                }
+
+                if viewModel.state == .offline && viewModel.songs.isEmpty {
+                    offlineRow
                 }
             }
             .listStyle(.plain)
@@ -171,6 +186,28 @@ struct SongsView: View {
             Spacer()
         }
         .listRowSeparator(.hidden)
+    }
+
+    private var offlineRow: some View {
+        VStack(spacing: 8) {
+            Image(systemName: "wifi.slash")
+                .font(.largeTitle)
+                .foregroundStyle(.secondary)
+            Text("No internet connection")
+                .font(.headline)
+            Text("You can still play your recently played songs.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+            Button("Try again") {
+                viewModel.searchSongs()
+            }
+            .buttonStyle(.bordered)
+        }
+        .frame(maxWidth: .infinity)
+        .padding()
+        .listRowSeparator(.hidden)
+        .accessibilityElement(children: .combine)
     }
 
     private func errorRow(_ message: String) -> some View {

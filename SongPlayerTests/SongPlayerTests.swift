@@ -229,7 +229,7 @@ struct SongsViewModelTests {
 
     @Test("search error sets error state")
     func searchError() async throws {
-        let mock = MockNetworkService(error: NetworkError.noConnection)
+        let mock = MockNetworkService(error: NetworkError.invalidResponse)
         let vm = SongsViewModel(networkService: mock)
         vm.searchText = "test"
         vm.searchSongs()
@@ -241,6 +241,18 @@ struct SongsViewModelTests {
         } else {
             Issue.record("Expected error state")
         }
+    }
+
+    @Test("noConnection maps to .offline state")
+    func searchOffline() async throws {
+        let mock = MockNetworkService(error: NetworkError.noConnection)
+        let vm = SongsViewModel(networkService: mock)
+        vm.searchText = "test"
+        vm.searchSongs()
+
+        try await Task.sleep(for: .milliseconds(100))
+
+        #expect(vm.state == .offline)
     }
 
     @Test("pagination sets hasMoreResults correctly")
@@ -340,6 +352,92 @@ struct CachedSongTests {
         #expect(converted.trackId == 99)
         #expect(converted.trackName == "Round Trip")
         #expect(converted.artistName == original.artistName)
+    }
+}
+
+// MARK: - AlbumViewModel offline mapping
+
+@Suite("AlbumViewModel offline")
+@MainActor
+struct AlbumViewModelOfflineTests {
+    @Test("noConnection maps to .offline state")
+    func loadAlbumOffline() async {
+        let mock = MockNetworkService(error: NetworkError.noConnection)
+        let vm = AlbumViewModel(networkService: mock)
+        await vm.loadAlbum(collectionId: 1)
+        if case .offline = vm.state {
+            // pass
+        } else {
+            Issue.record("Expected offline state")
+        }
+    }
+}
+
+// MARK: - MediaCacheService Tests
+
+@Suite("MediaCacheService")
+struct MediaCacheServiceTests {
+    /// Stub URLProtocol that returns canned bytes for any request, so we
+    /// avoid hitting the network in tests.
+    final class StubURLProtocol: URLProtocol, @unchecked Sendable {
+        nonisolated(unsafe) static var data: Data = Data("payload".utf8)
+        override class func canInit(with request: URLRequest) -> Bool { true }
+        override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
+        override func startLoading() {
+            let response = HTTPURLResponse(
+                url: request.url!, statusCode: 200,
+                httpVersion: nil, headerFields: nil
+            )!
+            client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+            client?.urlProtocol(self, didLoad: Self.data)
+            client?.urlProtocolDidFinishLoading(self)
+        }
+        override func stopLoading() {}
+    }
+
+    private func makeService() -> MediaCacheService {
+        let config = URLSessionConfiguration.ephemeral
+        config.protocolClasses = [StubURLProtocol.self]
+        return MediaCacheService(session: URLSession(configuration: config))
+    }
+
+    @Test("download stores file on disk and a second call hits the cache")
+    func downloadAndReuse() async throws {
+        StubURLProtocol.data = Data("hello-world".utf8)
+        let service = makeService()
+        let url = URL(string: "https://example.com/preview-\(UUID().uuidString).m4a")!
+
+        // Initial state: not cached.
+        #expect(service.localURL(for: url, kind: .audio) == nil)
+
+        let local = try await service.download(url, kind: .audio)
+        #expect(FileManager.default.fileExists(atPath: local.path))
+
+        // Now cached → localURL returns the same file.
+        let cached = service.localURL(for: url, kind: .audio)
+        #expect(cached?.path == local.path)
+
+        // Re-download is a no-op (returns the same path, doesn't re-fetch).
+        let again = try await service.download(url, kind: .audio)
+        #expect(again.path == local.path)
+
+        // Cleanup.
+        try? FileManager.default.removeItem(at: local)
+    }
+
+    @Test("image and audio go to separate folders")
+    func separateFolders() async throws {
+        let service = makeService()
+        let url = URL(string: "https://example.com/asset-\(UUID().uuidString)")!
+
+        let imageLocal = try await service.download(url, kind: .image)
+        let audioLocal = try await service.download(url, kind: .audio)
+
+        #expect(imageLocal != audioLocal)
+        #expect(imageLocal.deletingLastPathComponent() != audioLocal.deletingLastPathComponent())
+
+        try? FileManager.default.removeItem(at: imageLocal)
+        try? FileManager.default.removeItem(at: audioLocal)
     }
 }
 

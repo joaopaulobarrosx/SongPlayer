@@ -16,10 +16,10 @@ final class AudioPlayerService {
     private(set) var duration: TimeInterval = 0
     private(set) var currentSong: Song?
 
-    nonisolated(unsafe) private var player: AVPlayer?
-    nonisolated(unsafe) private var timeObserver: Any?
+    private var player: AVPlayer?
+    private var timeObserver: Any?
     private var statusObservation: NSKeyValueObservation?
-    nonisolated(unsafe) private var didFinishObserver: NSObjectProtocol?
+    private var didFinishObserver: NSObjectProtocol?
     private var isSeeking = false
     private var seekGuardTask: Task<Void, Never>?
 
@@ -316,12 +316,4 @@ final class AudioPlayerService {
         player = nil
     }
 
-    deinit {
-        if let timeObserver, let player {
-            player.removeTimeObserver(timeObserver)
-        }
-        if let didFinishObserver {
-            NotificationCenter.default.removeObserver(didFinishObserver)
-        }
-    }
 }

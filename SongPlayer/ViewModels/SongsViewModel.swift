@@ -8,6 +8,7 @@ final class SongsViewModel {
         case idle
         case loading
         case loaded
+        case offline
         case error(String)
     }
 
@@ -79,7 +80,11 @@ final class SongsViewModel {
                 // Cancelled — ignore
             } catch {
                 guard !Task.isCancelled else { return }
-                state = .error(error.localizedDescription)
+                if case NetworkError.noConnection = error {
+                    state = .offline
+                } else {
+                    state = .error(error.localizedDescription)
+                }
             }
         }
     }

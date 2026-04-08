@@ -5,11 +5,11 @@ struct PlayerView: View {
     @Bindable var audioPlayer: AudioPlayerService
     var onDismiss: (() -> Void)? = nil
     var onViewAlbum: ((Int) -> Void)?
+    var networkService: NetworkServiceProtocol = NetworkService()
 
     @Environment(\.dismiss) private var environmentDismiss
     @State private var showMoreSheet = false
     @State private var albumHasTracks = false
-    private let networkService: NetworkServiceProtocol = NetworkService()
     @State private var isDragging = false
     @State private var dragProgress: Double = 0
     @Binding var dragOffset: CGFloat
@@ -71,7 +71,9 @@ struct PlayerView: View {
                     let translation = value.translation.height
                     if translation > 120 || velocity > 800 {
                         withAnimation(.easeOut(duration: 0.25)) {
-                            dragOffset = UIScreen.main.bounds.height
+                            // Large enough to slide off any device; avoids the
+                            // deprecated UIScreen.main lookup.
+                            dragOffset = 2000
                         }
                         dismissPlayer()
                     } else {

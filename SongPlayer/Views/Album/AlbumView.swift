@@ -23,6 +23,12 @@ struct AlbumView: View {
                     systemImage: "exclamationmark.triangle",
                     description: Text(message)
                 )
+            case .offline:
+                ContentUnavailableView(
+                    "No internet connection",
+                    systemImage: "wifi.slash",
+                    description: Text("Connect to the internet to load this album.")
+                )
             case .loaded:
                 albumContent
             }

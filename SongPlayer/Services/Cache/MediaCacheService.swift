@@ -1,14 +1,18 @@
 import Foundation
 import CryptoKit
 
-protocol MediaCacheServiceProtocol: Sendable {
+nonisolated protocol MediaCacheServiceProtocol: Sendable {
     func localURL(for remoteURL: URL, kind: MediaCacheService.Kind) -> URL?
     func download(_ remoteURL: URL, kind: MediaCacheService.Kind) async throws -> URL
 }
 
 /// File-based cache for artwork images and audio previews so the app
 /// works fully offline once a song has been played at least once.
-final class MediaCacheService: MediaCacheServiceProtocol, @unchecked Sendable {
+///
+/// All stored properties are `Sendable` value/reference types whose
+/// underlying APIs (`URLSession`, `FileManager`) are documented thread-safe,
+/// so this type is safely `Sendable` without `@unchecked`.
+nonisolated final class MediaCacheService: MediaCacheServiceProtocol, Sendable {
     enum Kind {
         case image
         case audio
@@ -31,7 +35,6 @@ final class MediaCacheService: MediaCacheServiceProtocol, @unchecked Sendable {
     static let shared = MediaCacheService()
 
     private let session: URLSession
-    private let fileManager = FileManager.default
     private let baseURL: URL
 
     init(session: URLSession = .shared) {
@@ -45,7 +48,7 @@ final class MediaCacheService: MediaCacheServiceProtocol, @unchecked Sendable {
         self.baseURL = support.appendingPathComponent("MediaCache", isDirectory: true)
         for kind in [Kind.image, Kind.audio] {
             let dir = baseURL.appendingPathComponent(kind.folder, isDirectory: true)
-            try? fileManager.createDirectory(at: dir, withIntermediateDirectories: true)
+            try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         }
     }
 
@@ -59,18 +62,18 @@ final class MediaCacheService: MediaCacheServiceProtocol, @unchecked Sendable {
 
     func localURL(for remoteURL: URL, kind: Kind) -> URL? {
         let url = fileURL(for: remoteURL, kind: kind)
-        return fileManager.fileExists(atPath: url.path) ? url : nil
+        return FileManager.default.fileExists(atPath: url.path) ? url : nil
     }
 
     @discardableResult
     func download(_ remoteURL: URL, kind: Kind) async throws -> URL {
         let destination = fileURL(for: remoteURL, kind: kind)
-        if fileManager.fileExists(atPath: destination.path) {
+        if FileManager.default.fileExists(atPath: destination.path) {
             return destination
         }
         let (tempURL, _) = try await session.download(from: remoteURL)
-        try? fileManager.removeItem(at: destination)
-        try fileManager.moveItem(at: tempURL, to: destination)
+        try? FileManager.default.removeItem(at: destination)
+        try FileManager.default.moveItem(at: tempURL, to: destination)
         return destination
     }
 

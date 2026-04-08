@@ -6,6 +6,7 @@ final class AlbumViewModel {
     enum State {
         case loading
         case loaded
+        case offline
         case error(String)
     }
 
@@ -27,7 +28,11 @@ final class AlbumViewModel {
             songs.sort { ($0.discNumber ?? 0, $0.trackNumber ?? 0) < ($1.discNumber ?? 0, $1.trackNumber ?? 0) }
             state = .loaded
         } catch {
-            state = .error(error.localizedDescription)
+            if case NetworkError.noConnection = error {
+                state = .offline
+            } else {
+                state = .error(error.localizedDescription)
+            }
         }
     }
 }
