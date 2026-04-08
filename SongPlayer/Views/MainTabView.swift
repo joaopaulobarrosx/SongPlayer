@@ -3,19 +3,47 @@ import SwiftUI
 struct MainTabView: View {
     @State private var audioPlayer = AudioPlayerService()
     @State private var showFullPlayer = false
+    @State private var playerDragOffset: CGFloat = 0
+    @State private var pendingAlbumId: Int?
 
     var body: some View {
-        SongsView(audioPlayer: audioPlayer)
-            .fullScreenCover(isPresented: $showFullPlayer) {
-                NavigationStack {
-                    PlayerView(
-                        song: audioPlayer.currentSong ?? Song.placeholder,
-                        audioPlayer: audioPlayer,
-                        onDismiss: { showFullPlayer = false }
-                    )
-                }
+        SongsView(audioPlayer: audioPlayer, pendingAlbumId: $pendingAlbumId)
+            .fullScreenCover(isPresented: $showFullPlayer, onDismiss: {
+                playerDragOffset = 0
+            }) {
+                PlayerNavigationContainer(
+                    audioPlayer: audioPlayer,
+                    onDismiss: { showFullPlayer = false },
+                    playerDragOffset: $playerDragOffset
+                )
+                .offset(y: playerDragOffset)
             }
             .environment(\.openFullPlayer, { showFullPlayer = true })
+    }
+}
+
+// MARK: - Player navigation container
+
+private struct PlayerNavigationContainer: View {
+    @Bindable var audioPlayer: AudioPlayerService
+    var onDismiss: () -> Void
+    @Binding var playerDragOffset: CGFloat
+    @State private var albumDestination: Int?
+
+    var body: some View {
+        NavigationStack {
+            PlayerView(
+                song: audioPlayer.currentSong ?? Song.placeholder,
+                audioPlayer: audioPlayer,
+                onDismiss: onDismiss,
+                onViewAlbum: { albumDestination = $0 },
+                dragOffset: $playerDragOffset
+            )
+            .navigationDestination(item: $albumDestination) { id in
+                AlbumView(collectionId: id, audioPlayer: audioPlayer)
+            }
+        }
+        .environment(\.openFullPlayer, { albumDestination = nil })
     }
 }
 

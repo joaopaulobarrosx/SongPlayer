@@ -5,8 +5,12 @@ struct NowPlayingIcon: View {
 
     var body: some View {
         Image(systemName: "chart.bar.xaxis")
-            .symbolEffect(.variableColor.iterative, options: .repeating, isActive: isPlaying)
-            .foregroundStyle(.green)
+            .symbolEffect(
+                .variableColor.iterative.hideInactiveLayers.nonReversing,
+                options: .repeat(.continuous),
+                isActive: isPlaying
+            )
+            .foregroundStyle(.green.opacity(isPlaying ? 1 : 0.15))
             .font(.body)
             .frame(width: 24)
     }

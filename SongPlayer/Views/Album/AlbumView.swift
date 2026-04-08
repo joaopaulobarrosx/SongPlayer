@@ -7,7 +7,10 @@ struct AlbumView: View {
     @Environment(\.modelContext) private var modelContext
 
     @State private var viewModel = AlbumViewModel()
+    @State private var songsViewModel = SongsViewModel()
     @State private var selectedSong: Song?
+    @State private var playerDragOffset: CGFloat = 0
+    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         Group {
@@ -24,12 +27,16 @@ struct AlbumView: View {
                 albumContent
             }
         }
+        .safeAreaInset(edge: .bottom) {
+            MiniPlayerView(audioPlayer: audioPlayer)
+        }
         .navigationBarTitleDisplayMode(.inline)
         .task {
             await viewModel.loadAlbum(collectionId: collectionId)
         }
         .navigationDestination(item: $selectedSong) { song in
-            PlayerView(song: song, audioPlayer: audioPlayer)
+            PlayerView(song: song, audioPlayer: audioPlayer, dragOffset: $playerDragOffset)
+                .offset(y: playerDragOffset)
         }
     }
 
@@ -72,7 +79,7 @@ struct AlbumView: View {
 
                 Text(firstSong.artistName)
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.white)
             }
         }
         .padding(.top, 16)
@@ -82,58 +89,56 @@ struct AlbumView: View {
     private var songsList: some View {
         LazyVStack(spacing: 0) {
             ForEach(viewModel.songs) { song in
-                Button {
-                    let index = viewModel.songs.firstIndex(where: { $0.id == song.id }) ?? 0
-                    audioPlayer.play(song: song, playlist: viewModel.songs, index: index)
-                    selectedSong = song
-                } label: {
-                    HStack(spacing: 12) {
-                        AsyncImage(url: URL(string: song.artworkUrl100 ?? "")) { phase in
-                            switch phase {
-                            case .success(let image):
-                                image
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                            default:
-                                RoundedRectangle(cornerRadius: 4)
-                                    .fill(.quaternary)
-                                    .overlay {
-                                        Image(systemName: "music.note")
-                                            .font(.caption2)
-                                            .foregroundStyle(.secondary)
-                                    }
-                            }
+                let isCurrent = audioPlayer.currentSong?.id == song.id && audioPlayer.state != .idle
+                let isPlaying = isCurrent && audioPlayer.state == .playing
+                HStack(spacing: 12) {
+                    AsyncImage(url: URL(string: song.artworkUrl100 ?? "")) { phase in
+                        switch phase {
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                        default:
+                            RoundedRectangle(cornerRadius: 4)
+                                .fill(.quaternary)
+                                .overlay {
+                                    Image(systemName: "music.note")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
                         }
-                        .frame(width: 40, height: 40)
-                        .clipShape(RoundedRectangle(cornerRadius: 4))
+                    }
+                    .frame(width: 40, height: 40)
+                    .clipShape(RoundedRectangle(cornerRadius: 4))
 
-                        VStack(alignment: .leading, spacing: 2) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        HStack(spacing: 6) {
+                            if isCurrent {
+                                NowPlayingIcon(isPlaying: isPlaying)
+                            }
                             Text(song.trackName)
                                 .font(.body)
                                 .lineLimit(1)
-                            Text(song.artistName)
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                                .lineLimit(1)
+                                .foregroundStyle(isCurrent ? .green : .primary)
                         }
-
-                        Spacer()
-
-                        Text(song.formattedDuration)
+                        Text(song.artistName)
                             .font(.caption)
                             .foregroundStyle(.secondary)
-                            .monospacedDigit()
+                            .lineLimit(1)
                     }
-                    .padding(.horizontal)
-                    .padding(.vertical, 8)
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel("\(song.trackName) by \(song.artistName), \(song.formattedDuration)")
 
-                if song.id != viewModel.songs.last?.id {
-                    Divider()
-                        .padding(.leading, 68)
+                    Spacer()
                 }
+                .padding(.horizontal)
+                .padding(.vertical, 8)
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    let index = viewModel.songs.firstIndex(where: { $0.id == song.id }) ?? 0
+                    audioPlayer.play(song: song, playlist: viewModel.songs, index: index)
+                    songsViewModel.markAsPlayed(song: song, modelContext: modelContext)
+                }
+                .accessibilityLabel("\(song.trackName) by \(song.artistName)")
+
             }
         }
     }

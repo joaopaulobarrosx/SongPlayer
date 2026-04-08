@@ -1,15 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "play-on-repeat.png",
+      "filename" : "Stroke@3x 1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Stroke@3x 2.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Stroke@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

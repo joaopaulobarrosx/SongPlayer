@@ -5,8 +5,11 @@ struct SongsView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var viewModel = SongsViewModel()
     @Bindable var audioPlayer: AudioPlayerService
+    @Binding var pendingAlbumId: Int?
     @State private var moreSheetSong: Song?
     @State private var navigateToAlbum: Int?
+    @State private var albumHasTracks = false
+    private let networkService: NetworkServiceProtocol = NetworkService()
     @FocusState private var isSearchFocused: Bool
 
     var body: some View {
@@ -35,7 +38,8 @@ struct SongsView: View {
             .navigationTitle("Songs")
             .refreshable {
                 viewModel.searchSongs()
-                try? await Task.sleep(for: .milliseconds(500))
+                try? await Task.sleep(for: .milliseconds(800))
+                viewModel.loadRecentlyPlayed(modelContext: modelContext)
             }
             .overlay {
                 if viewModel.songs.isEmpty && viewModel.recentlyPlayed.isEmpty && viewModel.state == .idle {
@@ -56,10 +60,16 @@ struct SongsView: View {
             .navigationDestination(item: $navigateToAlbum) { collectionId in
                 AlbumView(collectionId: collectionId, audioPlayer: audioPlayer)
             }
+            .onChange(of: pendingAlbumId) { _, newValue in
+                if let id = newValue {
+                    navigateToAlbum = id
+                    pendingAlbumId = nil
+                }
+            }
             .sheet(item: $moreSheetSong) { song in
                 MoreOptionsSheet(song: song) {
                     moreSheetSong = nil
-                    if let collectionId = song.collectionId {
+                    if albumHasTracks, let collectionId = song.collectionId {
                         navigateToAlbum = collectionId
                     }
                 }
@@ -136,7 +146,18 @@ struct SongsView: View {
             isPlaying: isPlaying,
             isCurrentSong: isCurrent
         ) {
+            albumHasTracks = false
             moreSheetSong = song
+            if let collectionId = song.collectionId {
+                Task {
+                    do {
+                        let response = try await networkService.lookupAlbum(collectionId: collectionId)
+                        albumHasTracks = response.results.contains { $0.trackTimeMillis != nil }
+                    } catch {
+                        albumHasTracks = false
+                    }
+                }
+            }
         }
         .onTapGesture {
             playSong(song, from: playlist)

@@ -8,9 +8,12 @@ struct PlayerView: View {
 
     @Environment(\.dismiss) private var environmentDismiss
     @State private var showMoreSheet = false
+    @State private var albumHasTracks = false
+    private let networkService: NetworkServiceProtocol = NetworkService()
     @State private var isDragging = false
     @State private var dragProgress: Double = 0
-    @State private var dragOffset: CGFloat = 0
+    @Binding var dragOffset: CGFloat
+    @State private var isDismissGesture: Bool? = nil
 
     private func dismissPlayer() {
         if let onDismiss {
@@ -29,17 +32,17 @@ struct PlayerView: View {
             artworkView
 
             Spacer()
-                .frame(height: 32)
+                .frame(height: 56)
 
             songInfoView
 
             Spacer()
-                .frame(height: 20)
+                .frame(height: 28)
 
             timelineView
 
             Spacer()
-                .frame(height: 28)
+                .frame(height: 44)
 
             controlsView
 
@@ -47,16 +50,23 @@ struct PlayerView: View {
                 .frame(height: 40)
         }
         .padding(.horizontal, 24)
-        .offset(y: dragOffset)
         .simultaneousGesture(
             DragGesture(minimumDistance: 30, coordinateSpace: .global)
                 .onChanged { value in
-                    let translation = value.translation.height
-                    // Only track downward drags
-                    guard translation > 0 else { return }
-                    dragOffset = translation * (1 - min(translation / 600, 0.5))
+                    let t = value.translation
+                    // Determine gesture direction on first movement
+                    if isDismissGesture == nil {
+                        let isDownward = t.height > 0
+                        let isPrimarilyVertical = abs(t.height) > abs(t.width)
+                        isDismissGesture = isDownward && isPrimarilyVertical
+                    }
+                    guard isDismissGesture == true else { return }
+                    let vertical = t.height
+                    dragOffset = vertical * (1 - min(vertical / 600, 0.5))
                 }
                 .onEnded { value in
+                    defer { isDismissGesture = nil }
+                    guard isDismissGesture == true else { return }
                     let velocity = value.velocity.height
                     let translation = value.translation.height
                     if translation > 120 || velocity > 800 {
@@ -88,12 +98,25 @@ struct PlayerView: View {
             }
             ToolbarItem(placement: .principal) {
                 Text(activeSong.collectionName ?? "")
-                    .font(.subheadline)
-                    .fontWeight(.medium)
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundStyle(.white)
                     .lineLimit(1)
             }
             ToolbarItem(placement: .topBarTrailing) {
-                Button { showMoreSheet = true } label: {
+                Button {
+                    albumHasTracks = false
+                    showMoreSheet = true
+                    if let collectionId = activeSong.collectionId {
+                        Task {
+                            do {
+                                let response = try await networkService.lookupAlbum(collectionId: collectionId)
+                                albumHasTracks = response.results.contains { $0.trackTimeMillis != nil }
+                            } catch {
+                                albumHasTracks = false
+                            }
+                        }
+                    }
+                } label: {
                     Image(systemName: "ellipsis")
                         .fontWeight(.bold)
                 }
@@ -102,8 +125,7 @@ struct PlayerView: View {
         .sheet(isPresented: $showMoreSheet) {
             MoreOptionsSheet(song: activeSong) {
                 showMoreSheet = false
-                if let collectionId = activeSong.collectionId {
-                    dismissPlayer()
+                if albumHasTracks, let collectionId = activeSong.collectionId {
                     onViewAlbum?(collectionId)
                 }
             }
@@ -141,13 +163,13 @@ struct PlayerView: View {
             VStack(alignment: .leading, spacing: 4) {
                 MarqueeText(
                     text: activeSong.trackName,
-                    font: .title2,
+                    font: .system(size: 32),
                     fontWeight: .bold,
-                    color: Color(.label)
+                    color: .white
                 )
                 Text(activeSong.artistName)
                     .font(.body)
-                    .foregroundStyle(Color(.secondaryLabel))
+                    .foregroundStyle(Color.white.opacity(0.6))
                     .lineLimit(1)
             }
 
@@ -160,7 +182,9 @@ struct PlayerView: View {
                 Image(systemName: audioPlayer.autoPlayEnabled
                       ? "repeat"
                       : "minus.arrow.trianglehead.counterclockwise")
-                    .font(.title3)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 24, height: 24)
                     .foregroundStyle(.white)
             }
             .accessibilityLabel(audioPlayer.autoPlayEnabled ? "Auto-play on" : "Auto-play off")
@@ -169,35 +193,57 @@ struct PlayerView: View {
 
     // MARK: - Timeline
 
+    private var displayProgress: Double {
+        isDragging ? dragProgress : audioPlayer.progress
+    }
+
     private var timelineView: some View {
         VStack(spacing: 6) {
-            Slider(
-                value: Binding(
-                    get: { isDragging ? dragProgress : audioPlayer.progress },
-                    set: { newValue in
-                        isDragging = true
-                        dragProgress = newValue
-                    }
-                ),
-                in: 0...1,
-                onEditingChanged: { editing in
-                    if !editing {
-                        audioPlayer.seek(to: dragProgress)
-                        isDragging = false
-                    }
+            GeometryReader { geo in
+                let trackWidth = geo.size.width
+                let knobSize: CGFloat = 24
+                let trackHeight: CGFloat = 8
+                let filledWidth = max(0, min(trackWidth, trackWidth * displayProgress))
+                ZStack(alignment: .leading) {
+                    Capsule()
+                        .fill(Color.white.opacity(0.25))
+                        .frame(height: trackHeight)
+                    Capsule()
+                        .fill(Color.white)
+                        .frame(width: filledWidth, height: trackHeight)
+                    Circle()
+                        .fill(Color.white)
+                        .frame(width: knobSize, height: knobSize)
+                        .offset(x: filledWidth - knobSize / 2)
                 }
-            )
-            .tint(Color(.label))
+                .frame(height: knobSize)
+                .contentShape(Rectangle())
+                .gesture(
+                    DragGesture(minimumDistance: 0)
+                        .onChanged { value in
+                            isDragging = true
+                            dragProgress = max(0, min(1, value.location.x / trackWidth))
+                        }
+                        .onEnded { value in
+                            let pct = max(0, min(1, value.location.x / trackWidth))
+                            dragProgress = pct
+                            audioPlayer.seek(to: pct)
+                            isDragging = false
+                        }
+                )
+            }
+            .frame(height: 24)
+            .padding(.top, 4)
 
             HStack {
-                Text(formatTime(isDragging ? dragProgress * audioPlayer.duration : audioPlayer.currentTime))
-                    .font(.caption2)
-                    .foregroundStyle(Color(.secondaryLabel))
+                Text(formatTime(displayProgress * audioPlayer.duration))
+                    .font(.system(size: 14))
+                    .foregroundStyle(Color.white.opacity(0.6))
                     .monospacedDigit()
                 Spacer()
-                Text("-\(formatTime(audioPlayer.duration - (isDragging ? dragProgress * audioPlayer.duration : audioPlayer.currentTime)))")
-                    .font(.caption2)
-                    .foregroundStyle(Color(.secondaryLabel))
+                Text("-\(formatTime(audioPlayer.duration - displayProgress * audioPlayer.duration))")
+                    .font(.system(size: 14))
+                    .foregroundStyle(Color.white.opacity(0.6))
                     .monospacedDigit()
             }
         }
@@ -212,9 +258,9 @@ struct PlayerView: View {
             Button {
                 audioPlayer.playPrevious()
             } label: {
-                Image(systemName: "backward.fill")
-                    .font(.title2)
-                    .foregroundStyle(Color(.label))
+                Image(systemName: "backward.end.alt.fill")
+                    .font(.system(size: 28))
+                    .foregroundStyle(.white)
             }
             .accessibilityLabel("Previous")
 
@@ -223,11 +269,28 @@ struct PlayerView: View {
             } label: {
                 ZStack {
                     Circle()
-                        .fill(Color.white.opacity(0.2))
+                        .fill(Color.white.opacity(0.20))
+                        .overlay(
+                            Circle()
+                                .strokeBorder(
+                                    LinearGradient(
+                                        colors: [
+                                            Color.white.opacity(0.6),
+                                            Color.white.opacity(0.05),
+                                            Color.white.opacity(0.6)
+                                        ],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    ),
+                                    lineWidth: 1.5
+                                )
+                        )
                         .frame(width: 72, height: 72)
                     Image(systemName: audioPlayer.state == .playing ? "pause.fill" : "play.fill")
-                        .font(.system(size: 28, weight: .bold))
-                        .foregroundStyle(Color(.label))
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 25, height: 28.5)
+                        .foregroundStyle(.white)
                 }
             }
             .buttonStyle(.plain)
@@ -236,9 +299,9 @@ struct PlayerView: View {
             Button {
                 audioPlayer.playNext()
             } label: {
-                Image(systemName: "forward.fill")
-                    .font(.title2)
-                    .foregroundStyle(Color(.label))
+                Image(systemName: "forward.end.alt.fill")
+                    .font(.system(size: 28))
+                    .foregroundStyle(.white)
             }
             .accessibilityLabel("Next")
         }
