@@ -15,20 +15,17 @@ struct MiniPlayerView: View {
                 .frame(height: 2)
 
                 HStack(spacing: 12) {
-                    AsyncImage(url: URL(string: song.artworkUrl100 ?? "")) { phase in
-                        switch phase {
-                        case .success(let image):
-                            image
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                        default:
-                            RoundedRectangle(cornerRadius: 6)
-                                .fill(.quaternary)
-                                .overlay {
-                                    Image(systemName: "music.note")
-                                        .foregroundStyle(.secondary)
-                                }
-                        }
+                    CachedAsyncImage(url: URL(string: song.artworkUrl100 ?? "")) { image in
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                    } placeholder: {
+                        RoundedRectangle(cornerRadius: 6)
+                            .fill(.quaternary)
+                            .overlay {
+                                Image(systemName: "music.note")
+                                    .foregroundStyle(.secondary)
+                            }
                     }
                     .frame(width: 44, height: 44)
                     .clipShape(RoundedRectangle(cornerRadius: 6))

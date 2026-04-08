@@ -137,15 +137,10 @@ struct PlayerView: View {
 
     private var artworkView: some View {
         GeometryReader { geo in
-            AsyncImage(url: URL(string: activeSong.artworkUrlLarge ?? "")) { phase in
-                switch phase {
-                case .success(let image):
-                    image.resizable().aspectRatio(contentMode: .fit)
-                case .failure, .empty:
-                    artworkPlaceholder
-                @unknown default:
-                    artworkPlaceholder
-                }
+            CachedAsyncImage(url: URL(string: activeSong.artworkUrlLarge ?? "")) { image in
+                image.resizable().aspectRatio(contentMode: .fit)
+            } placeholder: {
+                artworkPlaceholder
             }
             .frame(width: geo.size.width, height: geo.size.width)
             .clipShape(RoundedRectangle(cornerRadius: 12))

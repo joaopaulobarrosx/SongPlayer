@@ -52,21 +52,18 @@ struct AlbumView: View {
     private var albumHeader: some View {
         VStack(spacing: 12) {
             if let firstSong = viewModel.songs.first {
-                AsyncImage(url: URL(string: firstSong.artworkUrlLarge ?? "")) { phase in
-                    switch phase {
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                    default:
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(.quaternary)
-                            .overlay {
-                                Image(systemName: "music.note")
-                                    .font(.largeTitle)
-                                    .foregroundStyle(.secondary)
-                            }
-                    }
+                CachedAsyncImage(url: URL(string: firstSong.artworkUrlLarge ?? "")) { image in
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                } placeholder: {
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(.quaternary)
+                        .overlay {
+                            Image(systemName: "music.note")
+                                .font(.largeTitle)
+                                .foregroundStyle(.secondary)
+                        }
                 }
                 .frame(width: 180, height: 180)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -92,21 +89,18 @@ struct AlbumView: View {
                 let isCurrent = audioPlayer.currentSong?.id == song.id && audioPlayer.state != .idle
                 let isPlaying = isCurrent && audioPlayer.state == .playing
                 HStack(spacing: 12) {
-                    AsyncImage(url: URL(string: song.artworkUrl100 ?? "")) { phase in
-                        switch phase {
-                        case .success(let image):
-                            image
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                        default:
-                            RoundedRectangle(cornerRadius: 4)
-                                .fill(.quaternary)
-                                .overlay {
-                                    Image(systemName: "music.note")
-                                        .font(.caption2)
-                                        .foregroundStyle(.secondary)
-                                }
-                        }
+                    CachedAsyncImage(url: URL(string: song.artworkUrl100 ?? "")) { image in
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                    } placeholder: {
+                        RoundedRectangle(cornerRadius: 4)
+                            .fill(.quaternary)
+                            .overlay {
+                                Image(systemName: "music.note")
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+                            }
                     }
                     .frame(width: 40, height: 40)
                     .clipShape(RoundedRectangle(cornerRadius: 4))

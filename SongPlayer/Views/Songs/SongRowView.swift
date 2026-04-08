@@ -8,20 +8,12 @@ struct SongRowView: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            AsyncImage(url: URL(string: song.artworkUrl100 ?? "")) { phase in
-                switch phase {
-                case .success(let image):
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                case .failure:
-                    artworkPlaceholder
-                case .empty:
-                    artworkPlaceholder
-                        .overlay(ProgressView().tint(.secondary))
-                @unknown default:
-                    artworkPlaceholder
-                }
+            CachedAsyncImage(url: URL(string: song.artworkUrl100 ?? "")) { image in
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+            } placeholder: {
+                artworkPlaceholder
             }
             .frame(width: 48, height: 48)
             .clipShape(RoundedRectangle(cornerRadius: 6))

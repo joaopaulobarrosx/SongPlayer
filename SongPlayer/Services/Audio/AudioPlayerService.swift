@@ -140,7 +140,7 @@ final class AudioPlayerService {
             self.currentIndex = index
         }
 
-        guard let urlString = song.previewUrl, let url = URL(string: urlString) else { return }
+        guard let urlString = song.previewUrl, let remoteURL = URL(string: urlString) else { return }
 
         cleanup()
         currentSong = song
@@ -148,7 +148,12 @@ final class AudioPlayerService {
         duration = 0
         state = .loading
 
-        let playerItem = AVPlayerItem(url: url)
+        // Prefer the local cached file if we have it (offline-first).
+        let playbackURL = MediaCacheService.shared.localURL(for: remoteURL, kind: .audio) ?? remoteURL
+        // Fire-and-forget prefetch of preview + artwork so this song works offline next time.
+        MediaCacheService.shared.prefetch(song: song)
+
+        let playerItem = AVPlayerItem(url: playbackURL)
         player = AVPlayer(playerItem: playerItem)
         player?.automaticallyWaitsToMinimizeStalling = false
 
