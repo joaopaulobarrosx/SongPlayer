@@ -2,430 +2,213 @@
   "sourceLanguage" : "en",
   "strings" : {
     "-%@" : {
-
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "-%@" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "-%@" } },
+        "pt" : { "stringUnit" : { "state" : "translated", "value" : "-%@" } }
+      }
     },
     "%@ by %@" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ by %2$@"
-          }
-        }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "%1$@ by %2$@" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "%1$@ de %2$@" } },
+        "pt" : { "stringUnit" : { "state" : "translated", "value" : "%1$@ por %2$@" } }
       }
     },
     "%@ by %@%@" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ by %2$@%3$@"
-          }
-        }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "%1$@ by %2$@%3$@" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "%1$@ de %2$@%3$@" } },
+        "pt" : { "stringUnit" : { "state" : "translated", "value" : "%1$@ por %2$@%3$@" } }
       }
     },
     "Album" : {
-      "extractionState" : "stale",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Album"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Álbum"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Álbum"
-          }
-        }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Album" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Álbum" } },
+        "pt" : { "stringUnit" : { "state" : "translated", "value" : "Álbum" } }
       }
     },
     "Album artwork" : {
-
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Album artwork" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Portada del álbum" } },
+        "pt" : { "stringUnit" : { "state" : "translated", "value" : "Capa do álbum" } }
+      }
     },
     "Auto-play off" : {
-
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Auto-play off" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Reproducción automática desactivada" } },
+        "pt" : { "stringUnit" : { "state" : "translated", "value" : "Reprodução automática desativada" } }
+      }
     },
     "Auto-play on" : {
-
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Auto-play on" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Reproducción automática activada" } },
+        "pt" : { "stringUnit" : { "state" : "translated", "value" : "Reprodução automática ativada" } }
+      }
     },
     "Cancel" : {
-      "extractionState" : "stale",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cancel"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cancelar"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cancelar"
-          }
-        }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Cancel" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Cancelar" } },
+        "pt" : { "stringUnit" : { "state" : "translated", "value" : "Cancelar" } }
       }
     },
     "Connect to the internet to load this album." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Connect to the internet to load this album."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Conéctate a internet para cargar este álbum."
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Conecte-se à internet para carregar este álbum."
-          }
-        }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Connect to the internet to load this album." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Conéctate a internet para cargar este álbum." } },
+        "pt" : { "stringUnit" : { "state" : "translated", "value" : "Conecte-se à internet para carregar este álbum." } }
       }
     },
     "Failed to Load Album" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Failed to Load Album"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Error al cargar el álbum"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Falha ao carregar álbum"
-          }
-        }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Failed to Load Album" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Error al cargar el álbum" } },
+        "pt" : { "stringUnit" : { "state" : "translated", "value" : "Falha ao carregar álbum" } }
       }
     },
     "Find your favorite songs on iTunes" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Find your favorite songs on iTunes"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Encuentra tus canciones favoritas en iTunes"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Encontre suas músicas favoritas no iTunes"
-          }
-        }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Find your favorite songs on iTunes" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Encuentra tus canciones favoritas en iTunes" } },
+        "pt" : { "stringUnit" : { "state" : "translated", "value" : "Encontre suas músicas favoritas no iTunes" } }
       }
     },
     "Next" : {
-
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Next" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Siguiente" } },
+        "pt" : { "stringUnit" : { "state" : "translated", "value" : "Próxima" } }
+      }
     },
     "No internet connection" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No internet connection"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sin conexión a internet"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sem conexão com a internet"
-          }
-        }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "No internet connection" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Sin conexión a internet" } },
+        "pt" : { "stringUnit" : { "state" : "translated", "value" : "Sem conexão com a internet" } }
       }
     },
     "Now Playing" : {
-      "extractionState" : "stale",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Now Playing"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reproduciendo"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tocando agora"
-          }
-        }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Now Playing" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Reproduciendo" } },
+        "pt" : { "stringUnit" : { "state" : "translated", "value" : "Tocando agora" } }
       }
     },
     "Now playing: %@ by %@" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Now playing: %1$@ by %2$@"
-          }
-        }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Now playing: %1$@ by %2$@" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Reproduciendo: %1$@ de %2$@" } },
+        "pt" : { "stringUnit" : { "state" : "translated", "value" : "Tocando: %1$@ por %2$@" } }
       }
     },
     "Pause" : {
-
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Pause" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Pausar" } },
+        "pt" : { "stringUnit" : { "state" : "translated", "value" : "Pausar" } }
+      }
     },
     "Play" : {
-
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Play" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Reproducir" } },
+        "pt" : { "stringUnit" : { "state" : "translated", "value" : "Tocar" } }
+      }
     },
     "Previous" : {
-
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Previous" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Anterior" } },
+        "pt" : { "stringUnit" : { "state" : "translated", "value" : "Anterior" } }
+      }
     },
     "Recently Played" : {
-      "extractionState" : "stale",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recently Played"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reproducidas recientemente"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tocadas recentemente"
-          }
-        }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Recently Played" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Reproducidas recientemente" } },
+        "pt" : { "stringUnit" : { "state" : "translated", "value" : "Tocadas recentemente" } }
       }
     },
     "Retry" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Retry"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reintentar"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tentar novamente"
-          }
-        }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Retry" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Reintentar" } },
+        "pt" : { "stringUnit" : { "state" : "translated", "value" : "Tentar novamente" } }
       }
     },
     "Search" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Search"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buscar"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buscar"
-          }
-        }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Search" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Buscar" } },
+        "pt" : { "stringUnit" : { "state" : "translated", "value" : "Buscar" } }
       }
     },
     "Search for Songs" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Search for Songs"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buscar canciones"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buscar músicas"
-          }
-        }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Search for Songs" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Buscar canciones" } },
+        "pt" : { "stringUnit" : { "state" : "translated", "value" : "Buscar músicas" } }
       }
     },
     "Something went wrong" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Something went wrong"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Algo salió mal"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Algo deu errado"
-          }
-        }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Something went wrong" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Algo salió mal" } },
+        "pt" : { "stringUnit" : { "state" : "translated", "value" : "Algo deu errado" } }
       }
     },
     "Song progress: %@ of %@" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Song progress: %1$@ of %2$@"
-          }
-        }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Song progress: %1$@ of %2$@" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Progreso: %1$@ de %2$@" } },
+        "pt" : { "stringUnit" : { "state" : "translated", "value" : "Progresso: %1$@ de %2$@" } }
       }
     },
     "Songs" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Songs"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Canciones"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Músicas"
-          }
-        }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Songs" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Canciones" } },
+        "pt" : { "stringUnit" : { "state" : "translated", "value" : "Músicas" } }
       }
     },
     "Tap to open player" : {
-
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Tap to open player" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Toca para abrir el reproductor" } },
+        "pt" : { "stringUnit" : { "state" : "translated", "value" : "Toque para abrir o player" } }
+      }
     },
     "Try again" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Try again"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Intentar de nuevo"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tentar novamente"
-          }
-        }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Try again" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Intentar de nuevo" } },
+        "pt" : { "stringUnit" : { "state" : "translated", "value" : "Tentar novamente" } }
       }
     },
     "View album" : {
-
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "View album" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Ver álbum" } },
+        "pt" : { "stringUnit" : { "state" : "translated", "value" : "Ver álbum" } }
+      }
     },
     "View Album" : {
-      "extractionState" : "stale",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "View Album"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ver álbum"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ver álbum"
-          }
-        }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "View Album" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Ver álbum" } },
+        "pt" : { "stringUnit" : { "state" : "translated", "value" : "Ver álbum" } }
       }
     },
     "You can still play your recently played songs." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You can still play your recently played songs."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aún puedes reproducir tus canciones recientes."
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Você ainda pode tocar suas músicas recentes."
-          }
-        }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "You can still play your recently played songs." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Aún puedes reproducir tus canciones recientes." } },
+        "pt" : { "stringUnit" : { "state" : "translated", "value" : "Você ainda pode tocar suas músicas recentes." } }
       }
     }
   },
