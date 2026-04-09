@@ -10,6 +10,8 @@ import UIKit
 final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate, CPInterfaceControllerDelegate {
     private var interfaceController: CPInterfaceController?
     private var recentlyPlayedTemplate: CPListTemplate?
+    private var albumTemplate: CPListTemplate?
+    private var albumSongs: [Song] = []
     private var songObservation: Any?
     private let networkService: NetworkServiceProtocol = NetworkService()
 
@@ -77,6 +79,7 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
         } onChange: { [weak self] in
             Task { @MainActor in
                 self?.refreshRecentlyPlayed()
+                self?.refreshAlbum()
                 self?.observeSongChanges()
             }
         }
@@ -130,19 +133,35 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
     }
 
     private func makeAlbumTemplate(songs: [Song]) -> CPListTemplate {
-        let items = songs.map { song -> CPListItem in
+        albumSongs = songs
+        let template = CPListTemplate(
+            title: songs.first?.collectionName ?? NSLocalizedString("Album", comment: ""),
+            sections: [CPListSection(items: buildAlbumItems(songs: songs))]
+        )
+        albumTemplate = template
+        return template
+    }
+
+    private func refreshAlbum() {
+        guard let template = albumTemplate else { return }
+        template.updateSections([CPListSection(items: buildAlbumItems(songs: albumSongs))])
+    }
+
+    private func buildAlbumItems(songs: [Song]) -> [CPListItem] {
+        let currentId = AudioPlayerService.shared.currentSong?.id
+        return songs.map { song -> CPListItem in
             let item = CPListItem(text: song.trackName, detailText: song.artistName)
             loadArtwork(for: song, into: item)
-            item.handler = { _, completion in
+            item.isPlaying = song.id == currentId
+            item.handler = { [weak self] _, completion in
                 Task { @MainActor in
                     AudioPlayerService.shared.play(song: song, playlist: songs, index: songs.firstIndex(where: { $0.id == song.id }) ?? 0)
+                    self?.refreshAlbum()
                     completion()
                 }
             }
             return item
         }
-        let title = songs.first?.collectionName ?? NSLocalizedString("Album", comment: "")
-        return CPListTemplate(title: title, sections: [CPListSection(items: items)])
     }
 
     // MARK: - Artwork loading
