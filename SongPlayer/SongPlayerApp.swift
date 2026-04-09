@@ -16,6 +16,12 @@ struct SongPlayerApp: App {
         }
     }()
 
+    init() {
+        // Activate the WatchConnectivity session early so the paired Apple
+        // Watch can start receiving Recently Played updates immediately.
+        _ = iOSConnectivityService.shared
+    }
+
     var body: some Scene {
         WindowGroup {
             SplashView()

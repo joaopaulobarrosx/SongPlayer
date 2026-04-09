@@ -1,0 +1,61 @@
+{
+  "": {
+    "swift-dependencies": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/master.swiftdeps"
+  },
+  "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Cache/MediaCacheService.swift": {
+    "dependencies": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/MediaCacheService.d",
+    "object": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/MediaCacheService.swift.o",
+    "swiftmodule": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/MediaCacheService~partial.swiftmodule",
+    "swift-dependencies": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/MediaCacheService.swiftdeps",
+    "diagnostics": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/MediaCacheService.dia"
+  },
+  "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Models/CachedSong.swift": {
+    "dependencies": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/CachedSong.d",
+    "object": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/CachedSong.swift.o",
+    "swiftmodule": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/CachedSong~partial.swiftmodule",
+    "swift-dependencies": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/CachedSong.swiftdeps",
+    "diagnostics": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/CachedSong.dia"
+  },
+  "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Models/Song.swift": {
+    "dependencies": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/Song.d",
+    "object": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/Song.swift.o",
+    "swiftmodule": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/Song~partial.swiftmodule",
+    "swift-dependencies": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/Song.swiftdeps",
+    "diagnostics": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/Song.dia"
+  },
+  "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Networking/APIEndpoint.swift": {
+    "dependencies": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/APIEndpoint.d",
+    "object": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/APIEndpoint.swift.o",
+    "swiftmodule": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/APIEndpoint~partial.swiftmodule",
+    "swift-dependencies": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/APIEndpoint.swiftdeps",
+    "diagnostics": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/APIEndpoint.dia"
+  },
+  "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Networking/NetworkService.swift": {
+    "dependencies": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/NetworkService.d",
+    "object": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/NetworkService.swift.o",
+    "swiftmodule": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/NetworkService~partial.swiftmodule",
+    "swift-dependencies": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/NetworkService.swiftdeps",
+    "diagnostics": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/NetworkService.dia"
+  },
+  "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Networking/NetworkServiceProtocol.swift": {
+    "dependencies": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/NetworkServiceProtocol.d",
+    "object": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/NetworkServiceProtocol.swift.o",
+    "swiftmodule": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/NetworkServiceProtocol~partial.swiftmodule",
+    "swift-dependencies": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/NetworkServiceProtocol.swiftdeps",
+    "diagnostics": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/NetworkServiceProtocol.dia"
+  },
+  "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/ViewModels/AlbumViewModel.swift": {
+    "dependencies": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/AlbumViewModel.d",
+    "object": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/AlbumViewModel.swift.o",
+    "swiftmodule": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/AlbumViewModel~partial.swiftmodule",
+    "swift-dependencies": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/AlbumViewModel.swiftdeps",
+    "diagnostics": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/AlbumViewModel.dia"
+  },
+  "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/ViewModels/SongsViewModel.swift": {
+    "dependencies": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/SongsViewModel.d",
+    "object": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/SongsViewModel.swift.o",
+    "swiftmodule": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/SongsViewModel~partial.swiftmodule",
+    "swift-dependencies": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/SongsViewModel.swiftdeps",
+    "diagnostics": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/SongsViewModel.dia"
+  }
+}
