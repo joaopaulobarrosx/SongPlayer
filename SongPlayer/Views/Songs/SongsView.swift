@@ -256,8 +256,6 @@ struct SongsView: View {
         isSearchFocused = false
         let index = playlist.firstIndex(where: { $0.id == song.id }) ?? 0
         audioPlayer.play(song: song, playlist: playlist, index: index)
-        viewModel.markAsPlayed(song: song, modelContext: modelContext)
         viewModel.cacheSongs(playlist, modelContext: modelContext)
-        iOSConnectivityService.shared.publishRecentlyPlayed(from: modelContext)
     }
 }

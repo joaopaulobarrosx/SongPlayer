@@ -35,6 +35,9 @@ final class AudioPlayerService {
     var playlist: [Song] = []
     var currentIndex: Int = 0
     var autoPlayEnabled: Bool = true
+    /// Called every time a song starts playing (tap, autoplay, next/previous).
+    /// The UI layer hooks into this to update `lastPlayedAt` in SwiftData.
+    var onSongStarted: ((Song) -> Void)?
 
     init() {
         configureAudioSession()
@@ -174,6 +177,7 @@ final class AudioPlayerService {
         currentTime = 0
         duration = 0
         state = .loading
+        onSongStarted?(song)
 
         // Prefer the local cached file if we have it (offline-first).
         let playbackURL = MediaCacheService.shared.localURL(for: remoteURL, kind: .audio) ?? remoteURL
