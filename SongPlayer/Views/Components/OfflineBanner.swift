@@ -10,7 +10,7 @@ struct OfflineBanner: View {
             HStack(spacing: 6) {
                 Image(systemName: "wifi.slash")
                     .font(.caption2)
-                Text("Sem conexão com a internet")
+                Text("No internet connection")
                     .font(.caption2)
                 Spacer()
             }

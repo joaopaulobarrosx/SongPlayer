@@ -22,9 +22,14 @@ final class ReachabilityService {
     func start() {
         Task { await check() }
         timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self] _ in
+        let newTimer = Timer(timeInterval: interval, repeats: true) { [weak self] _ in
             Task { @MainActor in await self?.check() }
         }
+        // `.common` mode keeps the timer firing even while the user is
+        // scrolling a list — otherwise the default run loop mode pauses it
+        // and the banner gets stuck after connectivity comes back.
+        RunLoop.main.add(newTimer, forMode: .common)
+        timer = newTimer
     }
 
     func stop() {
