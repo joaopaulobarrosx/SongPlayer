@@ -40,7 +40,6 @@ struct PlayerView: View {
             }
         }
         .onAppear { loadRecentlyPlayed() }
-        .onChange(of: audioPlayer.currentSong?.id) { _, _ in loadRecentlyPlayed() }
         .simultaneousGesture(
             DragGesture(minimumDistance: 30, coordinateSpace: .global)
                 .onChanged { value in
@@ -90,10 +89,12 @@ struct PlayerView: View {
                 .buttonStyle(.plain)
             }
             ToolbarItem(placement: .principal) {
-                Text(activeSong.collectionName ?? "")
-                    .font(.system(size: 17, weight: .semibold))
-                    .foregroundStyle(.white)
-                    .lineLimit(1)
+                if horizontalSizeClass != .regular {
+                    Text(activeSong.collectionName ?? "")
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundStyle(.white)
+                        .lineLimit(1)
+                }
             }
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
@@ -360,18 +361,7 @@ struct PlayerView: View {
             .frame(maxWidth: .infinity)
 
             // Right side — recently played
-            VStack(alignment: .leading, spacing: 0) {
-                HStack {
-                    Image(systemName: "music.note.list")
-                        .foregroundStyle(.secondary)
-                    Text("Recently Played")
-                        .font(.headline)
-                        .foregroundStyle(.white)
-                }
-                .padding(.horizontal, 16)
-                .padding(.top, 16)
-                .padding(.bottom, 8)
-
+            VStack(spacing: 0) {
                 ScrollView {
                     LazyVStack(spacing: 0) {
                         ForEach(recentlyPlayedSongs) { song in
@@ -384,6 +374,7 @@ struct PlayerView: View {
                                 }
                         }
                     }
+                    .padding(.top, 8)
                 }
             }
             .frame(width: 320)
@@ -411,15 +402,10 @@ struct PlayerView: View {
             .clipShape(RoundedRectangle(cornerRadius: 4))
 
             VStack(alignment: .leading, spacing: 2) {
-                HStack(spacing: 4) {
-                    if isCurrent {
-                        NowPlayingIcon(isPlaying: isPlaying)
-                    }
-                    Text(song.trackName)
-                        .font(.subheadline)
-                        .lineLimit(1)
-                        .foregroundStyle(isCurrent ? .green : .white)
-                }
+                Text(song.trackName)
+                    .font(.subheadline)
+                    .lineLimit(1)
+                    .foregroundStyle(isCurrent ? .green : .white)
                 Text(song.artistName)
                     .font(.caption2)
                     .foregroundStyle(.secondary)
@@ -427,6 +413,10 @@ struct PlayerView: View {
             }
 
             Spacer()
+
+            if isCurrent {
+                NowPlayingIcon(isPlaying: isPlaying)
+            }
         }
         .contentShape(Rectangle())
     }
