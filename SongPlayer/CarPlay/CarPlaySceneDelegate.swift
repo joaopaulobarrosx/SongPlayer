@@ -7,8 +7,10 @@ import UIKit
 /// control to the system `CPNowPlayingTemplate`. A custom Now Playing
 /// button pushes the current song's album as a second list template.
 @MainActor
-final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
+final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate, CPInterfaceControllerDelegate {
     private var interfaceController: CPInterfaceController?
+    private var recentlyPlayedTemplate: CPListTemplate?
+    private var songObservation: Any?
     private let networkService: NetworkServiceProtocol = NetworkService()
 
     // MARK: - Scene lifecycle
@@ -18,8 +20,12 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
         didConnect interfaceController: CPInterfaceController
     ) {
         self.interfaceController = interfaceController
-        interfaceController.setRootTemplate(makeRecentlyPlayedTemplate(), animated: false, completion: nil)
+        interfaceController.delegate = self
+        let root = makeRecentlyPlayedTemplate()
+        self.recentlyPlayedTemplate = root
+        interfaceController.setRootTemplate(root, animated: false, completion: nil)
         configureNowPlayingAlbumButton()
+        observeSongChanges()
     }
 
     func templateApplicationScene(
@@ -32,10 +38,26 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
     // MARK: - Recently played (root)
 
     private func makeRecentlyPlayedTemplate() -> CPListTemplate {
+        CPListTemplate(
+            title: NSLocalizedString("Recently Played", comment: ""),
+            sections: [CPListSection(items: buildRecentlyPlayedItems())]
+        )
+    }
+
+    private func refreshRecentlyPlayed() {
+        guard let template = recentlyPlayedTemplate else { return }
+        template.updateSections([CPListSection(items: buildRecentlyPlayedItems())])
+    }
+
+    private func buildRecentlyPlayedItems() -> [CPListItem] {
         let songs = fetchRecentlyPlayed()
-        let items = songs.map { song -> CPListItem in
+        let currentId = AudioPlayerService.shared.currentSong?.id
+        return songs.map { song -> CPListItem in
             let item = CPListItem(text: song.trackName, detailText: song.artistName)
             loadArtwork(for: song, into: item)
+            if song.id == currentId {
+                item.isPlaying = true
+            }
             item.handler = { [weak self] _, completion in
                 Task { @MainActor in
                     AudioPlayerService.shared.play(song: song, playlist: songs, index: songs.firstIndex(where: { $0.id == song.id }) ?? 0)
@@ -45,8 +67,27 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
             }
             return item
         }
-        let section = CPListSection(items: items)
-        return CPListTemplate(title: NSLocalizedString("Recently Played", comment: ""), sections: [section])
+    }
+
+    /// Refresh the list whenever the current song changes (autoplay, next,
+    /// previous, or tap on the iPhone).
+    private func observeSongChanges() {
+        songObservation = withObservationTracking {
+            _ = AudioPlayerService.shared.currentSong
+        } onChange: { [weak self] in
+            Task { @MainActor in
+                self?.refreshRecentlyPlayed()
+                self?.observeSongChanges()
+            }
+        }
+    }
+
+    // MARK: - CPInterfaceControllerDelegate
+
+    func templateWillAppear(_ aTemplate: CPTemplate, animated: Bool) {
+        if aTemplate === recentlyPlayedTemplate {
+            refreshRecentlyPlayed()
+        }
     }
 
     private func fetchRecentlyPlayed() -> [Song] {
