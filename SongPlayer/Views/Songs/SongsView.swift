@@ -182,6 +182,7 @@ struct SongsView: View {
                 }
             }
         }
+        .opacity(isUnplayableOffline(song) ? 0.4 : 1)
         .onTapGesture {
             playSong(song, from: playlist)
         }
@@ -237,7 +238,21 @@ struct SongsView: View {
 
     // MARK: - Actions
 
+    /// True when the song can't be played right now: we're offline AND the
+    /// audio preview isn't in the on-disk cache yet.
+    private func isUnplayableOffline(_ song: Song) -> Bool {
+        guard !reachability.isOnline else { return false }
+        guard let urlString = song.previewUrl, let url = URL(string: urlString) else { return true }
+        return MediaCacheService.shared.localURL(for: url, kind: .audio) == nil
+    }
+
     private func playSong(_ song: Song, from playlist: [Song]) {
+        // Block the tap entirely when offline and not cached — avoids the
+        // brief "flash" of the player opening only to fail.
+        guard !isUnplayableOffline(song) else {
+            UINotificationFeedbackGenerator().notificationOccurred(.warning)
+            return
+        }
         isSearchFocused = false
         let index = playlist.firstIndex(where: { $0.id == song.id }) ?? 0
         audioPlayer.play(song: song, playlist: playlist, index: index)
