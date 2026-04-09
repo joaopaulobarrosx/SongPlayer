@@ -3,6 +3,7 @@ import SwiftData
 
 struct SongsView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(ReachabilityService.self) private var reachability
     @State private var viewModel: SongsViewModel
     @Bindable var audioPlayer: AudioPlayerService
     @Binding var pendingAlbumId: Int?
@@ -49,6 +50,7 @@ struct SongsView: View {
                 }
             }
             .listStyle(.plain)
+            .listRowSeparator(.hidden)
             .scrollDismissesKeyboard(.immediately)
             .navigationTitle("Songs")
             .refreshable {
@@ -69,8 +71,12 @@ struct SongsView: View {
                     ContentUnavailableView.search(text: viewModel.searchText)
                 }
             }
-            .safeAreaInset(edge: .bottom) {
-                MiniPlayerView(audioPlayer: audioPlayer)
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                VStack(spacing: 0) {
+                    MiniPlayerView(audioPlayer: audioPlayer)
+                    OfflineBanner(reachability: reachability)
+                        .animation(.easeInOut(duration: 0.25), value: reachability.isOnline)
+                }
             }
             .navigationDestination(item: $navigateToAlbum) { collectionId in
                 AlbumView(collectionId: collectionId, audioPlayer: audioPlayer)
@@ -131,6 +137,7 @@ struct SongsView: View {
         Section {
             ForEach(viewModel.recentlyPlayed) { song in
                 songRow(song: song, playlist: viewModel.recentlyPlayed)
+                    .listRowSeparator(.hidden)
             }
             .onDelete { offsets in
                 for index in offsets {
@@ -145,6 +152,7 @@ struct SongsView: View {
         Section {
             ForEach(viewModel.songs) { song in
                 songRow(song: song, playlist: viewModel.songs)
+                    .listRowSeparator(.hidden)
                     .onAppear {
                         viewModel.loadMoreIfNeeded(currentSong: song)
                     }

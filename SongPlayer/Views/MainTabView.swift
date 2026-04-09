@@ -5,9 +5,11 @@ struct MainTabView: View {
     @State private var showFullPlayer = false
     @State private var playerDragOffset: CGFloat = 0
     @State private var pendingAlbumId: Int?
+    @State private var reachability = ReachabilityService.shared
 
     var body: some View {
         SongsView(audioPlayer: audioPlayer, pendingAlbumId: $pendingAlbumId)
+            .environment(reachability)
             .fullScreenCover(isPresented: $showFullPlayer, onDismiss: {
                 playerDragOffset = 0
             }) {
