@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct MainTabView: View {
-    @State private var audioPlayer = AudioPlayerService()
+    @State private var audioPlayer = AudioPlayerService.shared
     @State private var showFullPlayer = false
     @State private var playerDragOffset: CGFloat = 0
     @State private var pendingAlbumId: Int?

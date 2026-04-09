@@ -4,6 +4,10 @@ import MediaPlayer
 @MainActor
 @Observable
 final class AudioPlayerService {
+    /// Shared instance so non-SwiftUI scenes (like CarPlay) can control the
+    /// same player the phone UI uses.
+    static let shared = AudioPlayerService()
+
     enum PlaybackState {
         case idle
         case loading
@@ -111,23 +115,46 @@ final class AudioPlayerService {
         }
 
         MPNowPlayingInfoCenter.default().nowPlayingInfo = info
+        // CarPlay reads `playbackState` directly to flip its play/pause button.
+        // Without this the button stays stale even when `nowPlayingInfo` is updated.
+        switch state {
+        case .playing: MPNowPlayingInfoCenter.default().playbackState = .playing
+        case .paused:  MPNowPlayingInfoCenter.default().playbackState = .paused
+        case .loading: MPNowPlayingInfoCenter.default().playbackState = .interrupted
+        case .idle:    MPNowPlayingInfoCenter.default().playbackState = .stopped
+        }
 
-        // Load artwork asynchronously
-        if let urlString = song.artworkUrlLarge, let url = URL(string: urlString) {
-            Task.detached {
-                do {
-                    let (data, _) = try await URLSession.shared.data(from: url)
-                    if let image = UIImage(data: data) {
-                        let artwork = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
-                        await MainActor.run {
-                            var currentInfo = MPNowPlayingInfoCenter.default().nowPlayingInfo ?? [:]
-                            currentInfo[MPMediaItemPropertyArtwork] = artwork
-                            MPNowPlayingInfoCenter.default().nowPlayingInfo = currentInfo
-                        }
-                    }
-                } catch {
-                    // Artwork loading failed
+        // Load artwork: try cached file first, then the large (600x600) URL,
+        // then fall back to the thumbnail (100x100). `artworkUrlLarge` is
+        // synthesised by string replacement so it's never nil — but the file
+        // doesn't always exist on the iTunes CDN, so we must actually fall
+        // back on a failed download, not just on a nil URL. Without this,
+        // CarPlay shows no artwork at all for those songs.
+        let candidates = [song.artworkUrlLarge, song.artworkUrl100]
+            .compactMap { $0 }
+            .compactMap { URL(string: $0) }
+        guard !candidates.isEmpty else { return }
+        Task.detached {
+            var image: UIImage?
+            for url in candidates {
+                var data: Data?
+                if let cachedLocal = MediaCacheService.shared.localURL(for: url, kind: .image) {
+                    data = try? Data(contentsOf: cachedLocal)
                 }
+                if data == nil {
+                    data = try? await URLSession.shared.data(from: url).0
+                }
+                if let data, let loaded = UIImage(data: data) {
+                    image = loaded
+                    break
+                }
+            }
+            guard let image else { return }
+            let artwork = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
+            await MainActor.run {
+                var currentInfo = MPNowPlayingInfoCenter.default().nowPlayingInfo ?? [:]
+                currentInfo[MPMediaItemPropertyArtwork] = artwork
+                MPNowPlayingInfoCenter.default().nowPlayingInfo = currentInfo
             }
         }
     }
