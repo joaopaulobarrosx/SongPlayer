@@ -1,0 +1,771 @@
+{
+  "builtTestProducts" : [
+    {
+      "binaryPath" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCorePackageTests.xctest/Contents/MacOS/SongPlayerCorePackageTests",
+      "packagePath" : "/Applications/SongPlayer/SongPlayerCore",
+      "productName" : "SongPlayerCorePackageTests"
+    }
+  ],
+  "copyCommands" : {
+
+  },
+  "explicitTargetDependencyImportCheckingMode" : {
+    "none" : {
+
+    }
+  },
+  "generatedSourceTargetSet" : [
+
+  ],
+  "pluginDescriptions" : [
+
+  ],
+  "swiftCommands" : {
+    "C.SongPlayerCore-arm64-apple-macosx26.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/sources",
+      "importPath" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Cache/MediaCacheService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Models/CachedSong.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Models/Song.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Networking/APIEndpoint.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Networking/NetworkService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Networking/NetworkServiceProtocol.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/ViewModels/AlbumViewModel.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/ViewModels/SongsViewModel.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "SongPlayerCore",
+      "moduleOutputPath" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/Modules/SongPlayerCore.swiftmodule",
+      "objects" : [
+        "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/MediaCacheService.swift.o",
+        "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/CachedSong.swift.o",
+        "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/Song.swift.o",
+        "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/APIEndpoint.swift.o",
+        "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/NetworkService.swift.o",
+        "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/NetworkServiceProtocol.swift.o",
+        "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/AlbumViewModel.swift.o",
+        "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/SongsViewModel.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx14.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j10",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/include/SongPlayerCore-Swift.h",
+        "-swift-version",
+        "6",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "songplayercore"
+      ],
+      "outputFileMapPath" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/MediaCacheService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/CachedSong.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/Song.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/APIEndpoint.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/NetworkService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/NetworkServiceProtocol.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/AlbumViewModel.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/SongsViewModel.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/Modules/SongPlayerCore.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Cache/MediaCacheService.swift",
+        "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Models/CachedSong.swift",
+        "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Models/Song.swift",
+        "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Networking/APIEndpoint.swift",
+        "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Networking/NetworkService.swift",
+        "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Networking/NetworkServiceProtocol.swift",
+        "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/ViewModels/AlbumViewModel.swift",
+        "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/ViewModels/SongsViewModel.swift"
+      ],
+      "tempsPath" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.SongPlayerCorePackageTests-arm64-apple-macosx26.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCorePackageTests.build/sources",
+      "importPath" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCorePackageTests.derived/runner.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/Modules/SongPlayerCoreTests.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCorePackageTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "SongPlayerCorePackageTests",
+      "moduleOutputPath" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/Modules/SongPlayerCorePackageTests.swiftmodule",
+      "objects" : [
+        "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCorePackageTests.build/runner.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx14.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j10",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCorePackageTests.build/include/SongPlayerCorePackageTests-Swift.h",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "songplayercore"
+      ],
+      "outputFileMapPath" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCorePackageTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCorePackageTests.build/runner.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/Modules/SongPlayerCorePackageTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCorePackageTests.derived/runner.swift"
+      ],
+      "tempsPath" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCorePackageTests.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.SongPlayerCoreTests-arm64-apple-macosx26.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCoreTests.build/sources",
+      "importPath" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/Tests/SongPlayerCoreTests/SongPlayerCoreTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/Modules/SongPlayerCore.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCoreTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "SongPlayerCoreTests",
+      "moduleOutputPath" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/Modules/SongPlayerCoreTests.swiftmodule",
+      "objects" : [
+        "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCoreTests.build/SongPlayerCoreTests.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx14.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j10",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-swift-version",
+        "6",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "songplayercore"
+      ],
+      "outputFileMapPath" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCoreTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCoreTests.build/SongPlayerCoreTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/Modules/SongPlayerCoreTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Applications/SongPlayer/SongPlayerCore/Tests/SongPlayerCoreTests/SongPlayerCoreTests.swift"
+      ],
+      "tempsPath" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCoreTests.build",
+      "wholeModuleOptimization" : false
+    }
+  },
+  "swiftFrontendCommands" : {
+
+  },
+  "swiftTargetScanArgs" : {
+    "SongPlayerCore" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "SongPlayerCore",
+      "-package-name",
+      "songplayercore",
+      "-c",
+      "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Cache/MediaCacheService.swift",
+      "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Models/CachedSong.swift",
+      "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Models/Song.swift",
+      "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Networking/APIEndpoint.swift",
+      "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Networking/NetworkService.swift",
+      "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Networking/NetworkServiceProtocol.swift",
+      "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/ViewModels/AlbumViewModel.swift",
+      "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/ViewModels/SongsViewModel.swift",
+      "-I",
+      "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx14.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j10",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/include/SongPlayerCore-Swift.h",
+      "-swift-version",
+      "6",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "songplayercore",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "SongPlayerCorePackageTests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "SongPlayerCorePackageTests",
+      "-package-name",
+      "songplayercore",
+      "-c",
+      "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCorePackageTests.derived/runner.swift",
+      "-I",
+      "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx14.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j10",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCorePackageTests.build/include/SongPlayerCorePackageTests-Swift.h",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "songplayercore",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "SongPlayerCoreTests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "SongPlayerCoreTests",
+      "-package-name",
+      "songplayercore",
+      "-c",
+      "/Applications/SongPlayer/SongPlayerCore/Tests/SongPlayerCoreTests/SongPlayerCoreTests.swift",
+      "-I",
+      "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx14.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j10",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-swift-version",
+      "6",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "songplayercore",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ]
+  },
+  "targetDependencyMap" : {
+    "SongPlayerCore" : [
+
+    ],
+    "SongPlayerCorePackageTests" : [
+      "SongPlayerCoreTests",
+      "SongPlayerCore"
+    ],
+    "SongPlayerCoreTests" : [
+      "SongPlayerCore"
+    ]
+  },
+  "testDiscoveryCommands" : {
+
+  },
+  "testEntryPointCommands" : {
+    "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCorePackageTests.derived/runner.swift" : {
+      "inputs" : [
+
+      ],
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCorePackageTests.derived/runner.swift"
+        }
+      ]
+    }
+  },
+  "traitConfiguration" : {
+    "default" : {
+
+    }
+  },
+  "writeCommands" : {
+    "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Cache/MediaCacheService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Models/CachedSong.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Models/Song.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Networking/APIEndpoint.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Networking/NetworkService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Networking/NetworkServiceProtocol.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/ViewModels/AlbumViewModel.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/ViewModels/SongsViewModel.swift"
+        }
+      ],
+      "outputFilePath" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/sources"
+    },
+    "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCorePackageTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCorePackageTests.derived/runner.swift"
+        }
+      ],
+      "outputFilePath" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCorePackageTests.build/sources"
+    },
+    "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCorePackageTests.product/Objects.LinkFileList" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<link-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/APIEndpoint.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/AlbumViewModel.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/CachedSong.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/MediaCacheService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/NetworkService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/NetworkServiceProtocol.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/Song.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/SongsViewModel.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCorePackageTests.build/runner.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCoreTests.build/SongPlayerCoreTests.swift.o"
+        }
+      ],
+      "outputFilePath" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCorePackageTests.product/Objects.LinkFileList"
+    },
+    "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCoreTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/SongPlayer/SongPlayerCore/Tests/SongPlayerCoreTests/SongPlayerCoreTests.swift"
+        }
+      ],
+      "outputFilePath" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCoreTests.build/sources"
+    },
+    "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt" : {
+      "alwaysOutOfDate" : true,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<swift-get-version>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+        }
+      ],
+      "outputFilePath" : "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+    }
+  }
+}

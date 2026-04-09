@@ -1,0 +1,3 @@
+module SongPlayerCore {
+    header "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCore.build/include/SongPlayerCore-Swift.h"
+}

@@ -1,0 +1,3 @@
+module SongPlayerCorePackageTests {
+    header "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCorePackageTests.build/include/SongPlayerCorePackageTests-Swift.h"
+}

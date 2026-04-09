@@ -136,6 +136,8 @@ struct AlbumView: View {
                     let index = viewModel.songs.firstIndex(where: { $0.id == song.id }) ?? 0
                     audioPlayer.play(song: song, playlist: viewModel.songs, index: index)
                     songsViewModel.markAsPlayed(song: song, modelContext: modelContext)
+                    songsViewModel.cacheSongs(viewModel.songs, modelContext: modelContext)
+                    iOSConnectivityService.shared.publishRecentlyPlayed(from: modelContext)
                 }
                 .accessibilityLabel("\(song.trackName) by \(song.artistName)")
 

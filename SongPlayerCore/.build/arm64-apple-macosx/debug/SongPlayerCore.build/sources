@@ -1,0 +1,8 @@
+/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Cache/MediaCacheService.swift
+/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Models/CachedSong.swift
+/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Models/Song.swift
+/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Networking/APIEndpoint.swift
+/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Networking/NetworkService.swift
+/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/Networking/NetworkServiceProtocol.swift
+/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/ViewModels/AlbumViewModel.swift
+/Applications/SongPlayer/SongPlayerCore/Sources/SongPlayerCore/ViewModels/SongsViewModel.swift

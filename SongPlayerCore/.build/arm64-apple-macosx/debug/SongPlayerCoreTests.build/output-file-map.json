@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCoreTests.build/master.swiftdeps"
+  },
+  "/Applications/SongPlayer/SongPlayerCore/Tests/SongPlayerCoreTests/SongPlayerCoreTests.swift": {
+    "dependencies": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCoreTests.build/SongPlayerCoreTests.d",
+    "object": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCoreTests.build/SongPlayerCoreTests.swift.o",
+    "swiftmodule": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCoreTests.build/SongPlayerCoreTests~partial.swiftmodule",
+    "swift-dependencies": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCoreTests.build/SongPlayerCoreTests.swiftdeps",
+    "diagnostics": "/Applications/SongPlayer/SongPlayerCore/.build/arm64-apple-macosx/debug/SongPlayerCoreTests.build/SongPlayerCoreTests.dia"
+  }
+}

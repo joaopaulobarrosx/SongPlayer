@@ -235,5 +235,6 @@ struct SongsView: View {
         audioPlayer.play(song: song, playlist: playlist, index: index)
         viewModel.markAsPlayed(song: song, modelContext: modelContext)
         viewModel.cacheSongs(playlist, modelContext: modelContext)
+        iOSConnectivityService.shared.publishRecentlyPlayed(from: modelContext)
     }
 }
