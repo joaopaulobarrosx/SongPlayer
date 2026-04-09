@@ -45,6 +45,7 @@ struct SongPlayerApp: App {
     var body: some Scene {
         WindowGroup {
             SplashView()
+                .preferredColorScheme(.dark)
         }
         .modelContainer(sharedModelContainer)
     }

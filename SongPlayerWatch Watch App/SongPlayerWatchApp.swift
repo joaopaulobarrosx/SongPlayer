@@ -20,6 +20,7 @@ struct SongPlayerWatchApp: App {
     var body: some Scene {
         WindowGroup {
             RootView(audioPlayer: audioPlayer, connectivity: connectivity)
+                .preferredColorScheme(.dark)
         }
         .modelContainer(sharedModelContainer)
     }

@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 struct PlayerView: View {
     let song: Song
@@ -8,12 +9,15 @@ struct PlayerView: View {
     var networkService: NetworkServiceProtocol = NetworkService()
 
     @Environment(\.dismiss) private var environmentDismiss
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.modelContext) private var modelContext
     @State private var showMoreSheet = false
     @State private var albumHasTracks = false
     @State private var isDragging = false
     @State private var dragProgress: Double = 0
     @Binding var dragOffset: CGFloat
     @State private var isDismissGesture: Bool? = nil
+    @State private var recentlyPlayedSongs: [Song] = []
 
     private func dismissPlayer() {
         if let onDismiss {
@@ -28,28 +32,15 @@ struct PlayerView: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            artworkView
-
-            Spacer()
-                .frame(height: 56)
-
-            songInfoView
-
-            Spacer()
-                .frame(height: 28)
-
-            timelineView
-
-            Spacer()
-                .frame(height: 44)
-
-            controlsView
-
-            Spacer()
-                .frame(height: 40)
+        Group {
+            if horizontalSizeClass == .regular {
+                iPadLayout
+            } else {
+                iPhoneLayout
+            }
         }
-        .padding(.horizontal, 24)
+        .onAppear { loadRecentlyPlayed() }
+        .onChange(of: audioPlayer.currentSong?.id) { _, _ in loadRecentlyPlayed() }
         .simultaneousGesture(
             DragGesture(minimumDistance: 30, coordinateSpace: .global)
                 .onChanged { value in
@@ -312,6 +303,144 @@ struct PlayerView: View {
                     .font(.system(size: 60))
                     .foregroundStyle(.secondary)
             }
+    }
+
+    // MARK: - Layouts
+
+    private var iPhoneLayout: some View {
+        VStack(spacing: 0) {
+            artworkView
+
+            Spacer()
+                .frame(height: 56)
+
+            songInfoView
+
+            Spacer()
+                .frame(height: 28)
+
+            timelineView
+
+            Spacer()
+                .frame(height: 44)
+
+            controlsView
+
+            Spacer()
+                .frame(height: 40)
+        }
+        .padding(.horizontal, 24)
+    }
+
+    private var iPadLayout: some View {
+        HStack(spacing: 0) {
+            // Left side — player
+            VStack(spacing: 0) {
+                artworkView
+
+                Spacer()
+                    .frame(height: 40)
+
+                songInfoView
+
+                Spacer()
+                    .frame(height: 20)
+
+                timelineView
+
+                Spacer()
+                    .frame(height: 32)
+
+                controlsView
+
+                Spacer()
+                    .frame(height: 32)
+            }
+            .padding(.horizontal, 40)
+            .frame(maxWidth: .infinity)
+
+            // Right side — recently played
+            VStack(alignment: .leading, spacing: 0) {
+                HStack {
+                    Image(systemName: "music.note.list")
+                        .foregroundStyle(.secondary)
+                    Text("Recently Played")
+                        .font(.headline)
+                        .foregroundStyle(.white)
+                }
+                .padding(.horizontal, 16)
+                .padding(.top, 16)
+                .padding(.bottom, 8)
+
+                ScrollView {
+                    LazyVStack(spacing: 0) {
+                        ForEach(recentlyPlayedSongs) { song in
+                            iPadSidebarRow(song: song)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 6)
+                                .onTapGesture {
+                                    let index = recentlyPlayedSongs.firstIndex(where: { $0.id == song.id }) ?? 0
+                                    audioPlayer.play(song: song, playlist: recentlyPlayedSongs, index: index)
+                                }
+                        }
+                    }
+                }
+            }
+            .frame(width: 320)
+            .background(Color.white.opacity(0.05))
+        }
+    }
+
+    private func iPadSidebarRow(song: Song) -> some View {
+        let isCurrent = audioPlayer.currentSong?.id == song.id && audioPlayer.state != .idle
+        let isPlaying = isCurrent && audioPlayer.state == .playing
+
+        return HStack(spacing: 10) {
+            CachedAsyncImage(url: URL(string: song.artworkUrl100 ?? "")) { image in
+                image.resizable().aspectRatio(contentMode: .fill)
+            } placeholder: {
+                RoundedRectangle(cornerRadius: 4)
+                    .fill(.quaternary)
+                    .overlay {
+                        Image(systemName: "music.note")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
+            }
+            .frame(width: 40, height: 40)
+            .clipShape(RoundedRectangle(cornerRadius: 4))
+
+            VStack(alignment: .leading, spacing: 2) {
+                HStack(spacing: 4) {
+                    if isCurrent {
+                        NowPlayingIcon(isPlaying: isPlaying)
+                    }
+                    Text(song.trackName)
+                        .font(.subheadline)
+                        .lineLimit(1)
+                        .foregroundStyle(isCurrent ? .green : .white)
+                }
+                Text(song.artistName)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+            }
+
+            Spacer()
+        }
+        .contentShape(Rectangle())
+    }
+
+    // MARK: - Data
+
+    private func loadRecentlyPlayed() {
+        let descriptor = FetchDescriptor<CachedSong>(
+            predicate: #Predicate { $0.lastPlayedAt != nil },
+            sortBy: [SortDescriptor(\.lastPlayedAt, order: .reverse)]
+        )
+        if let cached = try? modelContext.fetch(descriptor) {
+            recentlyPlayedSongs = cached.prefix(30).map { $0.toSong() }
+        }
     }
 
     private func formatTime(_ seconds: TimeInterval) -> String {
